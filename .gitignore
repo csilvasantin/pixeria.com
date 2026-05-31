@@ -1,0 +1,230 @@
+# =============================================================================
+# macOS System Files
+# =============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+*.icloud
+
+# =============================================================================
+# User Data & Large Media (usually not versioned)
+# =============================================================================
+Downloads/
+Movies/
+Music/
+Pictures/
+Desktop/
+Documents/
+Public/
+Library/
+.Trash/
+.Trashes/
+
+# =============================================================================
+# SSH, Credentials & Secrets (NEVER commit private keys or tokens)
+# =============================================================================
+.ssh/id_*
+.ssh/*.pem
+.ssh/known_hosts.old
+.aws/
+.azure/
+.gcp/
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*token*
+*secret*
+credentials.json
+auth.json
+
+# =============================================================================
+# AI / LLM Tooling & Agents (Claude, Grok, Codex, Ollama, etc.)
+# =============================================================================
+.claude/
+.claude.json
+.claude.json.backup
+.grok/
+.codex/
+.opencode/
+.ollama/
+.cursor/
+.continue/
+.windsurf/
+.aider/
+
+# =============================================================================
+# PixerIA / Pixer.ai Projects & Builds (explicitly excluded from this meta-repo)
+# =============================================================================
+PixerIA/
+PixerIA-*/
+*pixer*
+*pixer-*
+*pixer_*
+Pixer.ai/
+pixer-worker/
+**/pixer-worker/**
+**/PixerIA/**
+**/Pixer/**
+
+# =============================================================================
+# Node.js / JavaScript
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+.yarn/
+*.tsbuildinfo
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.pyenv/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# =============================================================================
+# Rust
+# =============================================================================
+target/
+**/*.rs.bk
+Cargo.lock
+
+# =============================================================================
+# Go
+# =============================================================================
+bin/
+pkg/
+
+# =============================================================================
+# Java / Gradle / Maven
+# =============================================================================
+*.class
+*.jar
+*.war
+*.ear
+target/
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# =============================================================================
+# IDEs & Editors
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# =============================================================================
+# Logs, Caches & Temporary Files
+# =============================================================================
+*.log
+*.tmp
+*.temp
+.cache/
+.npm/
+.yarn/
+.pnpm-store/
+.bun/
+.eslintcache
+.stylelintcache
+*.pid
+*.seed
+*.pid.lock
+
+# =============================================================================
+# Unreal Engine (common on this machine)
+# =============================================================================
+UnrealEngine/
+*.uasset
+*.umap
+Saved/
+DerivedDataCache/
+Intermediate/
+
+# =============================================================================
+# Other Common Tooling
+# =============================================================================
+.android/
+.heroku/
+.netlify/
+.vercel/
+.serverless/
+.terraform/
+*.terraform.lock.hcl
+.direnv/
+.envrc
+.devenv/
+
+# =============================================================================
+# Misc
+# =============================================================================
+*.bak
+*.backup
+*~
+\#*\#
+._*
+Thumbs.db
+ehthumbs.db
+
+# =============================================================================
+# Optional: Uncomment the next line if you prefer to ignore EVERYTHING by default
+# and then force-add only the specific dotfiles you want to track.
+# This is a very common pattern for home-directory "dotfiles" repos.
+# =============================================================================
+# *
