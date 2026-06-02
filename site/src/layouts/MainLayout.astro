@@ -1,0 +1,106 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'es' | 'en';
+}
+
+const { 
+  title = 'PixerIA', 
+  description = 'Contenido para cartelería digital que emociona de verdad.',
+  lang = 'es' 
+} = Astro.props;
+
+const isSpanish = lang === 'es';
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    
+    <title>{title} — PixerIA</title>
+  </head>
+  <body class="bg-cream-50 text-charcoal antialiased">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-cream-50/95 backdrop-blur-md border-b border-cream-100">
+      <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-orange flex items-center justify-center">
+            <span class="text-cream-50 font-semibold text-lg tracking-tighter">P</span>
+          </div>
+          <span class="font-semibold text-xl tracking-tight">PixerIA</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center gap-8 text-sm">
+          <a href="#producto" class="hover:text-orange transition-colors">
+            {isSpanish ? 'El Producto' : 'The Product'}
+          </a>
+          <a href="#como-funciona" class="hover:text-orange transition-colors">
+            {isSpanish ? 'Cómo funciona' : 'How it works'}
+          </a>
+          <a href="#ejemplos" class="hover:text-orange transition-colors">
+            {isSpanish ? 'Ejemplos' : 'Examples'}
+          </a>
+          <a href="#estilo" class="hover:text-orange transition-colors font-medium">
+            {isSpanish ? 'Nuestro estilo' : 'Our Style'}
+          </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <!-- Language Switcher -->
+          <div class="flex items-center rounded-full bg-surface p-1 text-sm">
+            <a 
+              href="/" 
+              class={`px-3 py-1 rounded-full transition-all ${lang === 'es' ? 'bg-orange text-cream-50' : 'hover:bg-cream-100'}`}
+            >
+              ES
+            </a>
+            <a 
+              href="/en" 
+              class={`px-3 py-1 rounded-full transition-all ${lang === 'en' ? 'bg-orange text-cream-50' : 'hover:bg-cream-100'}`}
+            >
+              EN
+            </a>
+          </div>
+
+          <!-- CTA -->
+          <a 
+            href="#acceso" 
+            class="px-5 py-2 rounded-full bg-orange text-cream-50 text-sm font-medium hover:bg-orange-dark transition-colors"
+          >
+            {isSpanish ? 'Acceder' : 'Get Access'}
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <slot />
+
+    <!-- Footer -->
+    <footer class="bg-charcoal text-cream-100 py-12">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-full bg-orange flex items-center justify-center">
+              <span class="text-cream-50 text-xs font-bold">P</span>
+            </div>
+            <span class="text-cream-50">PixerIA</span>
+          </div>
+          
+          <div class="text-cream-100/60">
+            © {new Date().getFullYear()} PixerIA. {isSpanish ? 'Contenido que cuenta historias.' : 'Content that tells stories.'}
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

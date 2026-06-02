@@ -33,6 +33,10 @@ Library/
 .Trash/
 .Trashes/
 
+# Allow Astro website public assets (the root Public/ rule would otherwise ignore it on macOS)
+!site/public/
+!site/public/**
+
 # =============================================================================
 # SSH, Credentials & Secrets (NEVER commit private keys or tokens)
 # =============================================================================

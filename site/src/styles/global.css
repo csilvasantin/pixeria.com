@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ============================================
+   PIXERIA BRAND SYSTEM
+   ============================================ */
+
+@theme {
+  /* === Core Colors === */
+  --color-cream-50: #FDF8F3;
+  --color-cream-100: #F8F0E6;
+
+  --color-orange: #E07A3D;
+  --color-orange-light: #E89A6A;
+  --color-orange-dark: #C55E2A;
+
+  --color-blue: #0D3B66;
+  --color-blue-light: #1A5A8A;
+  --color-blue-dark: #082A4A;
+
+  --color-teal: #2E8B8B;
+  --color-teal-light: #4AA8A8;
+  --color-teal-dark: #1F6A6A;
+
+  --color-gold: #E8B86D;
+  --color-gold-light: #F0D29B;
+  --color-gold-dark: #D4A14A;
+
+  --color-charcoal: #1F2529;
+  --color-charcoal-light: #2F363C;
+
+  /* === Semantic Tokens === */
+  --color-primary: #E07A3D;           /* Pixar Orange */
+  --color-primary-hover: #C55E2A;
+
+  --color-secondary: #0D3B66;         /* Story Blue */
+
+  --color-accent: #2E8B8B;            /* Magic Teal */
+
+  --color-background: #FDF8F3;        /* Warm Cream */
+  --color-surface: #F8F0E6;
+
+  --color-text: #1F2529;              /* Rich Charcoal */
+  --color-text-muted: #4A535A;
+}
+
+/* Base typography for PixerIA */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, .heading {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Smooth transitions for brand feel */
+a, button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hero cinematic feel */
+.hero-gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 59, 102, 0.65) 0%,
+    rgba(13, 59, 102, 0.35) 40%,
+    rgba(253, 248, 243, 0.1) 100%
+  );
+}
