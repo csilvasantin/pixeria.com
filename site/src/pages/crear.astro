@@ -1,0 +1,1222 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout 
+  title="Crear con Grok | PixerIA" 
+  description="Genera vídeos e imágenes con Grok de xAI por defecto. El creador oficial de Pixeria."
+  lang="es"
+>
+  <!-- HERO -->
+  <section class="pt-20 pb-12 bg-[#0D3B66] text-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/10 text-sm tracking-[1.5px] mb-4">
+        EXCLUSIVO CON GROK
+      </div>
+      
+      <h1 class="text-6xl md:text-7xl font-semibold tracking-[-3px] mb-4" data-god="crear.title">
+        Crear Videos con Grok
+      </h1>
+      
+      <p class="max-w-2xl mx-auto text-xl text-white/80 mb-8" data-god="crear.subtitle">
+        Genera vídeos cinematográficos con inteligencia de xAI Grok. Calidad premium para pantallas y campañas.
+      </p>
+      
+      <div class="flex items-center justify-center gap-3 text-sm">
+        <div class="px-3 py-1 bg-white/10 rounded-full">Grok Imagine Video</div>
+        <div class="px-3 py-1 bg-white/10 rounded-full">Hasta 15 segundos</div>
+        <div class="px-3 py-1 bg-white/10 rounded-full">Alta fidelidad</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENERATOR -->
+  <section class="max-w-6xl mx-auto px-6 py-12">
+
+    <!-- NUEVA SECCIÓN: CONTENIDOS SEGMENTADOS -->
+    <div class="mb-8 p-6 bg-white rounded-3xl border border-cream-100 shadow">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-lg font-semibold tracking-tight">Contenidos Segmentados</h3>
+          <p class="text-xs text-text-muted">Ajusta el contenido a los circuitos que se venden en Omnypublicity y se muestran en el gemelo digital (el globo con inventario en tiempo real). <a href="/segmentados/" class="underline hover:no-underline">Ver gemelo completo →</a></p>
+        </div>
+        <button onclick="resetSegments()" class="text-xs px-3 py-1 border border-orange/50 text-orange rounded-full hover:bg-orange/5">Reset</button>
+      </div>
+
+      <!-- Ubicación: Exterior o Interior -->
+      <div class="mb-5">
+        <div class="text-[10px] uppercase tracking-[1.5px] text-charcoal mb-2 font-medium">Tipo de Publicidad</div>
+        <div class="grid grid-cols-2 gap-3">
+          <div onclick="toggleSegment(this, 'ubicacion', 'exterior')" class="segment-card flex items-start gap-3 p-3 rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active" data-active="true">
+            <div>
+              <div class="font-semibold text-sm">Publicidad Exterior</div>
+              <div class="text-[11px] text-text-muted">Fuera del Xpacio (ej. pantalla de la puerta del Xtanco)</div>
+            </div>
+          </div>
+          <div onclick="toggleSegment(this, 'ubicacion', 'interior')" class="segment-card flex items-start gap-3 p-3 rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active" data-active="true">
+            <div>
+              <div class="font-semibold text-sm">Publicidad Interior</div>
+              <div class="text-[11px] text-text-muted">Dentro del Xpacio (ej. pantalla del Metahuman)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Género -->
+      <div class="mb-5">
+        <div class="text-[10px] uppercase tracking-[1.5px] text-charcoal mb-2 font-medium">Género Objetivo</div>
+        <div class="flex flex-wrap gap-2">
+          <div onclick="toggleSegment(this, 'genero', 'hombre')" class="segment-pill px-4 py-1.5 text-sm rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active" data-active="true">Hombre</div>
+          <div onclick="toggleSegment(this, 'genero', 'mujer')" class="segment-pill px-4 py-1.5 text-sm rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active" data-active="true">Mujer</div>
+        </div>
+      </div>
+
+      <!-- Edad (multi-select) -->
+      <div>
+        <div class="text-[10px] uppercase tracking-[1.5px] text-charcoal mb-2 font-medium">Rango de Edad (puedes seleccionar varios)</div>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+          <div onclick="toggleSegment(this, 'edades', 'nino')" class="segment-pill p-2 border border-cream-100 rounded-2xl cursor-pointer active text-center" data-active="true">
+            <div class="font-medium">Niño</div>
+            <div class="text-[10px] text-text-muted">&lt;14 años</div>
+          </div>
+          <div onclick="toggleSegment(this, 'edades', 'joven')" class="segment-pill p-2 border border-cream-100 rounded-2xl cursor-pointer active text-center" data-active="true">
+            <div class="font-medium">Joven</div>
+            <div class="text-[10px] text-text-muted">15-30 años</div>
+          </div>
+          <div onclick="toggleSegment(this, 'edades', 'adulto')" class="segment-pill p-2 border border-cream-100 rounded-2xl cursor-pointer active text-center" data-active="true">
+            <div class="font-medium">Adulto</div>
+            <div class="text-[10px] text-text-muted">30-50 años</div>
+          </div>
+          <div onclick="toggleSegment(this, 'edades', 'senior')" class="segment-pill p-2 border border-cream-100 rounded-2xl cursor-pointer active text-center" data-active="true">
+            <div class="font-medium">Senior</div>
+            <div class="text-[10px] text-text-muted">50-65 años</div>
+          </div>
+          <div onclick="toggleSegment(this, 'edades', 'vejez')" class="segment-pill p-2 border border-cream-100 rounded-2xl cursor-pointer active text-center" data-active="true">
+            <div class="font-medium">Vejez</div>
+            <div class="text-[10px] text-text-muted">&gt;65 años</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 text-[10px] text-text-muted">Los prompts se ajustarán automáticamente al público seleccionado para que el contenido coincida con los circuitos disponibles en Omnypublicity y el gemelo digital.</div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      
+      <!-- VIDEO GENERATOR -->
+      <div class="bg-white rounded-3xl shadow-xl border border-cream-100 overflow-hidden">
+        <div class="bg-[#0D3B66] text-white px-6 py-4 flex items-center justify-between">
+          <div class="font-semibold text-lg" data-god="crear.videoTab">Vídeo</div>
+          <div class="text-xs px-3 py-1 bg-white/20 rounded-full">Siempre Grok por defecto</div>
+        </div>
+
+        <div class="p-6">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-charcoal mb-1.5" data-god="crear.promptLabelVideo">Describe el vídeo</label>
+            <textarea id="video-prompt" class="w-full h-28 px-4 py-3 rounded-2xl border border-cream-100 text-sm" placeholder="Un plano lento al atardecer..." data-god="crear.promptPlaceholderVideo"></textarea>
+          </div>
+
+          <!-- Visual Model Selector for Video -->
+          <div class="mb-4">
+            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5" data-god="crear.modelLabel">Motor (Grok por defecto)</div>
+            <div class="grid grid-cols-4 gap-1.5" id="video-models"></div>
+          </div>
+
+          <!-- Video specific controls -->
+          <div class="grid grid-cols-3 gap-3 mb-6 text-sm">
+            <div>
+              <label class="block text-xs font-medium text-charcoal mb-1" data-god="crear.duration">Duración</label>
+              <div class="flex items-center gap-2">
+                <input type="range" id="video-duration" min="1" max="15" value="8" class="flex-1 accent-orange">
+                <span id="video-duration-val" class="font-mono text-xs w-8 text-right">8s</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-charcoal mb-1" data-god="crear.aspect">Aspecto</label>
+              <select id="video-aspect" class="w-full px-3 py-1.5 rounded-xl border text-xs">
+                <option value="16:9">16:9 Horizontal</option>
+                <option value="9:16">9:16 Vertical</option>
+                <option value="1:1">1:1 Cuadrado</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-charcoal mb-1" data-god="crear.resolution">Resolución</label>
+              <select id="video-resolution" class="w-full px-3 py-1.5 rounded-xl border text-xs">
+                <option value="720p">720p</option>
+                <option value="1080p">1080p</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="generateVideo()" class="w-full py-3 rounded-2xl bg-orange text-white font-semibold text-sm hover:bg-orange-dark transition-all">
+            <span data-god="crear.generate">Generar con Grok</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- IMAGE GENERATOR -->
+      <div class="bg-white rounded-3xl shadow-xl border border-cream-100 overflow-hidden">
+        <div class="bg-[#0D3B66] text-white px-6 py-4 flex items-center justify-between">
+          <div class="font-semibold text-lg" data-god="crear.imageTab">Imagen</div>
+          <div class="text-xs px-3 py-1 bg-white/20 rounded-full">Siempre Grok por defecto</div>
+        </div>
+
+        <div class="p-6">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-charcoal mb-1.5" data-god="crear.promptLabelImage">Describe la imagen</label>
+            <textarea id="image-prompt" class="w-full h-28 px-4 py-3 rounded-2xl border border-cream-100 text-sm" placeholder="Retrato cinematográfico..." data-god="crear.promptPlaceholderImage"></textarea>
+          </div>
+
+          <!-- Visual Model Selector for Image -->
+          <div class="mb-4">
+            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5" data-god="crear.modelLabel">Motor (Grok por defecto)</div>
+            <div class="grid grid-cols-4 gap-1.5" id="image-models"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 mb-6 text-sm">
+            <div>
+              <label class="block text-xs font-medium text-charcoal mb-1">Aspecto</label>
+              <select id="image-aspect" class="w-full px-3 py-1.5 rounded-xl border text-xs">
+                <option value="1:1">1:1 Cuadrado</option>
+                <option value="16:9">16:9 Horizontal</option>
+                <option value="9:16">9:16 Vertical</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-charcoal mb-1">Cantidad</label>
+              <select id="image-count" class="w-full px-3 py-1.5 rounded-xl border text-xs">
+                <option value="1">1 imagen</option>
+                <option value="2">2 imágenes</option>
+                <option value="4">4 imágenes</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="generateImage()" class="w-full py-3 rounded-2xl bg-orange text-white font-semibold text-sm hover:bg-orange-dark transition-all">
+            <span data-god="crear.generate">Generar con Grok</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- AUDIO CARD -->
+      <div class="bg-white rounded-3xl border border-cream-100 shadow overflow-hidden">
+        <div class="px-5 py-3 bg-[#0D3B66] text-white flex items-center justify-between text-sm">
+          <span class="font-semibold" data-god="crear.audioTab">Voz / Audio</span>
+          <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded">Grok + Eleven</span>
+        </div>
+        <div class="p-5 space-y-4">
+          <textarea id="audio-prompt" class="w-full h-20 text-sm border rounded-2xl p-3" placeholder="..." data-god="crear.promptPlaceholderAudio"></textarea>
+
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5">Motor</div>
+            <div class="grid grid-cols-4 gap-1.5 text-[11px]" id="audio-models"></div>
+          </div>
+
+          <div id="audio-params" class="grid grid-cols-2 gap-2 text-xs"></div>
+
+          <button onclick="generateAudio()" class="w-full py-2 bg-orange text-white rounded-2xl text-sm font-semibold">Generar con Grok</button>
+        </div>
+      </div>
+
+      <!-- MUSIC CARD -->
+      <div class="bg-white rounded-3xl border border-cream-100 shadow overflow-hidden">
+        <div class="px-5 py-3 bg-[#0D3B66] text-white flex items-center justify-between text-sm">
+          <span class="font-semibold" data-god="crear.musicTab">Música</span>
+          <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded">Grok + Lyria</span>
+        </div>
+        <div class="p-5 space-y-4">
+          <textarea id="music-prompt" class="w-full h-16 text-sm border rounded-2xl p-3" placeholder="..." data-god="crear.promptPlaceholderMusic"></textarea>
+
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5">Motor</div>
+            <div class="grid grid-cols-4 gap-1.5 text-[11px]" id="music-models"></div>
+          </div>
+
+          <div id="music-params" class="space-y-2 text-xs"></div>
+
+          <div class="flex gap-2">
+            <button onclick="generateMusicLyrics()" class="flex-1 text-xs border py-1 rounded-2xl">Letra con Grok</button>
+            <button onclick="generateMusic()" class="flex-1 bg-orange text-white rounded-2xl text-sm py-1 font-semibold">Generar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Shared Status / Result area - IMPROVED -->
+    <div id="status-panel" class="hidden mt-8 max-w-5xl mx-auto bg-white rounded-3xl border border-cream-100 shadow-xl overflow-hidden">
+      <!-- Generating state - improved with video preview + progress -->
+      <div id="generating-state" class="p-8">
+        <div id="video-preview-area" class="hidden mx-auto mb-6 w-full max-w-[720px]">
+          <!-- Dynamic video generation preview mock -->
+          <div class="relative aspect-video bg-[#0a0f14] rounded-2xl overflow-hidden border border-white/10 shadow-inner">
+            <!-- Film grain + cinematic background -->
+            <div class="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-[length:3px_3px]"></div>
+            <!-- Moving scanlines for film feel -->
+            <div class="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(255,255,255,0.03)_50%)] bg-[length:100%_4px] animate-[scan_2s_linear_infinite]"></div>
+            
+            <!-- Center content -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <div class="text-white/50 text-xs tracking-[3px] mb-2 font-mono">GROK • RENDERING</div>
+              
+              <!-- Dynamic waveform / frames -->
+              <div class="w-4/5 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mb-3"></div>
+              
+              <div class="flex gap-1.5 items-end h-9 mb-4">
+                <div class="w-1.5 bg-white/30 animate-[pulse_1s_ease-in-out_infinite]" style="height:35%"></div>
+                <div class="w-1.5 bg-white/50 animate-[pulse_0.8s_ease-in-out_infinite_150ms]" style="height:95%"></div>
+                <div class="w-1.5 bg-white/40 animate-[pulse_1.1s_ease-in-out_infinite_80ms]" style="height:60%"></div>
+                <div class="w-1.5 bg-white/70 animate-[pulse_0.7s_ease-in-out_infinite_220ms]" style="height:100%"></div>
+                <div class="w-1.5 bg-white/35 animate-[pulse_1.2s_ease-in-out_infinite]" style="height:45%"></div>
+                <div class="w-1.5 bg-white/55 animate-[pulse_0.9s_ease-in-out_infinite_120ms]" style="height:80%"></div>
+              </div>
+              
+              <div class="text-[10px] text-white/30 tracking-widest">MOTION • LIGHT • COMPOSITION</div>
+            </div>
+
+            <!-- Progress overlay -->
+            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
+              <div id="video-progress-bar" 
+                   class="h-1.5 bg-gradient-to-r from-orange to-[#E8B86D] transition-all duration-300"
+                   style="width: 0%"></div>
+            </div>
+
+            <div class="absolute bottom-3 right-3 text-[10px] font-mono text-white/50 bg-black/40 px-1.5 rounded">
+              <span id="video-progress-percent">0</span>%
+            </div>
+          </div>
+        </div>
+
+        <!-- Image loading mosaic (for image generation) -->
+        <div id="image-preview-area" class="hidden mx-auto mb-6 w-full max-w-[720px]">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div class="aspect-square bg-[#0a0f14] rounded-xl border border-white/10 relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-br from-orange/10 to-transparent animate-pulse"></div>
+              <div class="absolute bottom-1 left-1 right-1 h-0.5 bg-white/20"><div class="h-0.5 bg-orange w-0 transition-all" id="img-bar-0"></div></div>
+            </div>
+            <div class="aspect-square bg-[#0a0f14] rounded-xl border border-white/10 relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-br from-orange/10 to-transparent animate-pulse delay-150"></div>
+              <div class="absolute bottom-1 left-1 right-1 h-0.5 bg-white/20"><div class="h-0.5 bg-orange w-0 transition-all" id="img-bar-1"></div></div>
+            </div>
+            <div class="aspect-square bg-[#0a0f14] rounded-xl border border-white/10 relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-br from-orange/10 to-transparent animate-pulse delay-300"></div>
+              <div class="absolute bottom-1 left-1 right-1 h-0.5 bg-white/20"><div class="h-0.5 bg-orange w-0 transition-all" id="img-bar-2"></div></div>
+            </div>
+            <div class="aspect-square bg-[#0a0f14] rounded-xl border border-white/10 relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-br from-orange/10 to-transparent animate-pulse delay-500"></div>
+              <div class="absolute bottom-1 left-1 right-1 h-0.5 bg-white/20"><div class="h-0.5 bg-orange w-0 transition-all" id="img-bar-3"></div></div>
+            </div>
+          </div>
+          <div class="text-center text-[10px] text-white/40 mt-1 tracking-widest">GENERATING THUMBNAILS WITH GROK</div>
+        </div>
+
+        <!-- General generating info -->
+        <div class="text-center">
+          <div class="flex justify-center items-center gap-3 mb-2">
+            <div class="animate-spin w-5 h-5 border-[3px] border-orange border-t-transparent rounded-full"></div>
+            <span id="generating-text" class="font-medium text-lg" data-god="crear.generating">Generando con Grok...</span>
+          </div>
+
+          <div id="request-id" class="text-xs font-mono text-text-muted mb-1"></div>
+          <div id="polling-status" class="text-xs text-text-muted mb-3"></div>
+
+          <button onclick="cancelCurrentGeneration()" 
+                  class="text-xs px-3 py-1 border border-orange/50 text-orange rounded hover:bg-orange/10">
+            Cancelar
+          </button>
+        </div>
+      </div>
+
+      <!-- Result state -->
+      <div id="result-state" class="hidden">
+        <!-- Header -->
+        <div class="px-8 pt-6 pb-4 bg-surface border-b flex items-start justify-between">
+          <div>
+            <div class="text-[10px] uppercase tracking-[1.5px] text-orange">Listo • <span id="result-model"></span></div>
+            <h3 id="result-title" class="text-2xl font-semibold tracking-tight"></h3>
+          </div>
+          <div id="result-meta" class="text-right text-xs text-text-muted"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8" id="result-content"></div>
+
+        <!-- Actions -->
+        <div class="px-8 py-5 border-t bg-surface flex flex-wrap gap-3 items-center text-sm">
+          <button onclick="downloadResult()" class="px-5 py-2 bg-charcoal text-cream-50 rounded-2xl font-medium flex items-center gap-2" data-god="crear.download">
+            ⬇ Descargar
+          </button>
+          <button onclick="useInSignage()" class="px-4 py-2 border border-charcoal rounded-2xl hover:bg-white">Usar en Signage / Admira</button>
+          <button onclick="regenerateWithSame()" class="px-4 py-2 border rounded-2xl hover:bg-white">Regenerar con mismos parámetros</button>
+          <button onclick="editPromptFromResult()" class="px-4 py-2 text-orange hover:underline">Editar prompt</button>
+
+          <div class="flex-1"></div>
+          <button onclick="resetAll()" class="px-4 py-2 text-sm">Crear nuevo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent creations -->
+    <div id="recent-creations" class="hidden max-w-7xl mx-auto px-6 mt-8">
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-xs uppercase tracking-widest text-orange">Creaciones recientes (esta sesión)</div>
+        <button onclick="clearRecent()" class="text-xs text-text-muted hover:text-orange">limpiar</button>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs" id="recent-list"></div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-6 pb-16 text-center text-xs text-text-muted">
+    <span data-god="crear.powered">Por defecto siempre con Grok (xAI). Puedes elegir otros motores.</span>
+  </div>
+</MainLayout>
+
+<script>
+const WORKER = 'https://pixer-eleven.csilvasantin.workers.dev';
+
+let currentResult = { url: null, type: null };
+
+// Visual model cards data
+const MODEL_OPTIONS = {
+  video: [
+    { id: 'grok', label: 'Grok', sub: 'xAI', default: true, color: 'orange' },
+    { id: 'veo', label: 'Veo 3', sub: 'Google', default: false },
+    { id: 'veo-fast', label: 'Veo Fast', sub: 'Google', default: false },
+    { id: 'kling', label: 'Kling', sub: 'Próximamente', default: false, disabled: true }
+  ],
+  image: [
+    { id: 'grok', label: 'Grok', sub: 'xAI', default: true, color: 'orange' },
+    { id: 'imagen', label: 'Imagen 4', sub: 'Google', default: false },
+    { id: 'imagen-ultra', label: 'Ultra', sub: 'Google', default: false },
+    { id: 'flux', label: 'Flux', sub: 'Próximamente', default: false, disabled: true }
+  ],
+  audio: [
+    { id: 'eleven', label: 'Eleven v3', sub: 'Grok+Eleven', default: true, color: 'orange' },
+    { id: 'eleven-turbo', label: 'Turbo', sub: 'Rápido', default: false },
+    { id: 'grok-voice', label: 'Grok Voice', sub: 'xAI', default: false },
+    { id: 'other', label: 'Otro', sub: 'Próximamente', default: false, disabled: true }
+  ],
+  music: [
+    { id: 'lyria', label: 'Lyria 3', sub: 'Grok+Lyria', default: true, color: 'orange' },
+    { id: 'lyria-pro', label: 'Lyria Pro', sub: 'Alta calidad', default: false },
+    { id: 'suno', label: 'Suno', sub: 'Próximamente', default: false, disabled: true },
+    { id: 'other', label: 'Otro', sub: 'Próximamente', default: false, disabled: true }
+  ]
+};
+
+function createModelCards(type, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = '';
+  const options = MODEL_OPTIONS[type] || [];
+
+  options.forEach(opt => {
+    const div = document.createElement('div');
+    div.className = `p-2 border rounded-2xl text-center cursor-pointer text-[10px] transition-all ${opt.default ? 'border-orange bg-orange/10' : 'border-cream-100 hover:border-orange'} ${opt.disabled ? 'opacity-50 pointer-events-none' : ''}`;
+    div.innerHTML = `
+      <div class="font-semibold">${opt.label}</div>
+      <div class="text-[9px] text-text-muted">${opt.sub}</div>
+    `;
+    if (opt.default) div.dataset.selected = 'true';
+
+    div.onclick = () => {
+      // deselect all
+      container.querySelectorAll('div').forEach(d => d.classList.remove('border-orange', 'bg-orange/10'));
+      div.classList.add('border-orange', 'bg-orange/10');
+      container.dataset.selected = opt.id;
+      renderDynamicParams(type, opt.id);
+    };
+
+    container.appendChild(div);
+  });
+
+  // set initial selected
+  container.dataset.selected = options.find(o => o.default)?.id || options[0].id;
+  renderDynamicParams(type, container.dataset.selected);
+}
+
+function renderDynamicParams(type, model) {
+  const container = document.getElementById(`${type}-dynamic-params`) || document.getElementById(`${type}-params`);
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (type === 'video') {
+    if (model === 'grok' || model === 'veo' || model === 'veo-fast') {
+      container.innerHTML = `
+        <div><label class="text-[9px]">Duración</label><input type="range" id="video-duration" min="1" max="15" value="8" class="w-full accent-orange"><span id="vd-val" class="text-[9px]">8s</span></div>
+        <div><label class="text-[9px]">Aspecto</label><select id="video-aspect" class="w-full text-xs border rounded"><option value="16:9">16:9</option><option value="9:16">9:16</option><option value="1:1">1:1</option></select></div>
+        <div><label class="text-[9px]">Resolución</label><select id="video-res" class="w-full text-xs border rounded"><option>720p</option><option>1080p</option></select></div>
+      `;
+      const dur = container.querySelector('#video-duration');
+      const val = container.querySelector('#vd-val');
+      if (dur && val) dur.oninput = () => val.textContent = dur.value + 's';
+    }
+  }
+
+  if (type === 'image') {
+    container.innerHTML = `
+      <div><label class="text-[9px]">Aspecto</label><select id="img-aspect" class="w-full text-xs border rounded"><option value="1:1">1:1</option><option value="16:9">16:9</option><option value="9:16">9:16</option></select></div>
+      <div><label class="text-[9px]">Cantidad</label><select id="img-count" class="w-full text-xs border rounded"><option value="1">1</option><option value="2">2</option><option value="4">4</option></select></div>
+      <div class="col-span-1"><label class="text-[9px]">Estilo extra</label><input id="img-style" placeholder="cinematic" class="w-full text-xs border rounded px-1"></div>
+    `;
+  }
+
+  if (type === 'audio') {
+    container.innerHTML = `
+      <div><label class="text-[9px]">Voz</label><select id="audio-voice" class="w-full text-xs border rounded"><option value="EXAVITQu4vr4xnSDxMaL">Bella (cálida)</option><option value="21m00Tcm4TlvDq8ikWAM">Rachel</option></select></div>
+      <div><label class="text-[9px]">Estabilidad</label><input type="range" id="audio-stab" min="0" max="1" step="0.1" value="0.75"></div>
+    `;
+  }
+
+  if (type === 'music') {
+    container.innerHTML = `
+      <div class="col-span-2"><label class="text-[9px]">Letra (opcional)</label><textarea id="music-lyrics" class="w-full h-10 text-xs border rounded" placeholder="Letra aquí..."></textarea></div>
+      <div><label class="text-[9px]">Cantante</label><input id="music-singer" value="voz femenina cálida" class="w-full text-xs border rounded"></div>
+    `;
+  }
+}
+
+function getSelectedModel(type) {
+  const cont = document.getElementById(`${type}-models`);
+  return cont ? cont.dataset.selected : 'grok';
+}
+
+// === SEGMENTACIÓN DE CONTENIDOS (nueva sección para Omnypublicity / gemelo) ===
+let segments = {
+  ubicacion: ['exterior', 'interior'],
+  genero: ['hombre', 'mujer'],
+  edades: ['nino', 'joven', 'adulto', 'senior', 'vejez']
+};
+
+function saveSegments() {
+  try { localStorage.setItem('pixer_last_segments', JSON.stringify(segments)); } catch (e) {}
+}
+
+function toggleSegment(el, category, value) {
+  if (!segments[category]) segments[category] = [];
+  const idx = segments[category].indexOf(value);
+  if (idx > -1) {
+    segments[category].splice(idx, 1);
+    el.classList.remove('active');
+  } else {
+    segments[category].push(value);
+    el.classList.add('active');
+  }
+  saveSegments();
+}
+
+function resetSegments() {
+  segments = {
+    ubicacion: ['exterior', 'interior'],
+    genero: ['hombre', 'mujer'],
+    edades: ['nino', 'joven', 'adulto', 'senior', 'vejez']
+  };
+  document.querySelectorAll('.segment-card, .segment-pill').forEach(el => el.classList.add('active'));
+  saveSegments();
+}
+
+function buildSegmentText() {
+  let parts = [];
+  if (segments.ubicacion && segments.ubicacion.length) {
+    parts.push(`publicidad ${segments.ubicacion.join(' o ')}`);
+  }
+  if (segments.genero && segments.genero.length) {
+    parts.push(`dirigido a ${segments.genero.join(' y ')}`);
+  }
+  if (segments.edades && segments.edades.length) {
+    const labels = { nino: 'niños <14', joven: 'jóvenes 15-30', adulto: 'adultos 30-50', senior: 'seniors 50-65', vejez: 'vejez >65' };
+    parts.push(`para ${segments.edades.map(e => labels[e]).join(', ')}`);
+  }
+  if (parts.length === 0) return '';
+  return `Contenido segmentado para ${parts.join(', ')} en cartelería digital premium. Ajustar tono, lenguaje, imágenes y estilo específicamente para ese público objetivo y los circuitos de Omnypublicity.`;
+}
+
+function initSegmentsFromStorage() {
+  try {
+    const saved = localStorage.getItem('pixer_last_segments');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object') {
+        segments = { ...segments, ...parsed };
+      }
+    }
+  } catch (e) {}
+  // reflect in UI
+  document.querySelectorAll('.segment-card, .segment-pill').forEach(el => {
+    el.classList.remove('active');
+    const isCard = el.classList.contains('segment-card');
+    let val = '';
+    if (isCard) {
+      // infer from text content (simple)
+      const txt = (el.textContent || '').toLowerCase();
+      if (txt.includes('exterior')) val = 'exterior';
+      if (txt.includes('interior')) val = 'interior';
+    } else {
+      val = (el.textContent || '').trim().toLowerCase();
+      if (val === 'niño') val = 'nino';
+      if (val === 'joven') val = 'joven';
+      if (val === 'adulto') val = 'adulto';
+      if (val === 'senior') val = 'senior';
+      if (val.includes('vejez') || val.includes('>65')) val = 'vejez';
+      if (val === 'hombre') val = 'hombre';
+      if (val === 'mujer') val = 'mujer';
+    }
+    const cat = isCard ? 'ubicacion' : (val === 'hombre' || val === 'mujer' ? 'genero' : 'edades');
+    if (segments[cat] && segments[cat].includes(val)) {
+      el.classList.add('active');
+    }
+  });
+}
+
+function getEffectivePrompt(rawPrompt, type) {
+  const prefix = buildSegmentText();
+  if (!prefix) return rawPrompt;
+  const lower = (rawPrompt || '').toLowerCase();
+  if (lower.includes('segmentad') || lower.includes('público objetivo') || lower.includes('omnypublicity')) {
+    return rawPrompt; // user already wrote targeting
+  }
+  return `${prefix}\n\n${rawPrompt || ''}`.trim();
+}
+
+// === Video Preview + Progress Helpers ===
+function showVideoGeneratingPreview() {
+  const previewArea = document.getElementById('video-preview-area');
+  if (previewArea) previewArea.classList.remove('hidden');
+
+  // Reset progress
+  const bar = document.getElementById('video-progress-bar');
+  const pct = document.getElementById('video-progress-percent');
+  if (bar) bar.style.width = '0%';
+  if (pct) pct.textContent = '0';
+}
+
+function hideVideoGeneratingPreview() {
+  const previewArea = document.getElementById('video-preview-area');
+  if (previewArea) previewArea.classList.add('hidden');
+}
+
+function updateVideoProgress(percent, statusText = '') {
+  const bar = document.getElementById('video-progress-bar');
+  const pct = document.getElementById('video-progress-percent');
+  const polling = document.getElementById('polling-status');
+
+  const safePercent = Math.min(99, Math.max(0, Math.floor(percent)));
+
+  if (bar) bar.style.width = safePercent + '%';
+  if (pct) pct.textContent = safePercent;
+
+  if (polling && statusText) {
+    polling.textContent = statusText;
+  }
+}
+
+function showImageGeneratingPreview(count = 4) {
+  const area = document.getElementById('image-preview-area');
+  if (!area) return;
+  area.classList.remove('hidden');
+
+  // Reset bars
+  for (let i = 0; i < 4; i++) {
+    const b = document.getElementById(`img-bar-${i}`);
+    if (b) b.style.width = '0%';
+  }
+}
+
+function hideImageGeneratingPreview() {
+  const area = document.getElementById('image-preview-area');
+  if (area) area.classList.add('hidden');
+}
+
+function updateImageProgress(index, percent) {
+  const bar = document.getElementById(`img-bar-${index}`);
+  if (bar) {
+    bar.style.width = Math.min(100, Math.max(0, percent)) + '%';
+  }
+}
+
+// === REAL POLLING HELPERS ===
+let currentPollTimer = null;
+let currentPollRequestId = null;
+
+function clearCurrentPoll() {
+  if (currentPollTimer) {
+    clearInterval(currentPollTimer);
+    currentPollTimer = null;
+  }
+  currentPollRequestId = null;
+}
+
+function cancelCurrentGeneration() {
+  clearCurrentPoll();
+  hideVideoGeneratingPreview();
+  const panel = document.getElementById('status-panel');
+  const gen = document.getElementById('generating-state');
+  if (panel) panel.classList.add('hidden');
+  if (gen) gen.classList.remove('hidden');
+  const statusText = document.getElementById('polling-status');
+  if (statusText) statusText.textContent = 'Cancelado por el usuario';
+}
+
+async function pollUntilDone(requestId, isVeo = false, onUpdate = null) {
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+    const maxAttempts = 45; // ~ 3.5 minutes
+    const intervalMs = 4500;
+    const startTime = Date.now();
+
+    currentPollRequestId = requestId;
+
+    currentPollTimer = setInterval(async () => {
+      attempts++;
+      const elapsed = Math.round((Date.now() - startTime) / 1000);
+
+      try {
+        let statusRes;
+        let data;
+
+        if (isVeo) {
+          statusRes = await fetch(`${WORKER}/veo/status/${encodeURIComponent(requestId)}`);
+        } else {
+          statusRes = await fetch(`${WORKER}/xai/video/${encodeURIComponent(requestId)}`);
+        }
+
+        data = await statusRes.json();
+
+        // Calculate estimated progress (capped at 95% until we get the final result)
+        let estimatedProgress = Math.min(95, Math.floor((elapsed / 75) * 100)); // assume ~75s average for Grok video
+
+        if (onUpdate) onUpdate(data, elapsed, attempts, estimatedProgress);
+
+        const status = (data.status || data.state || '').toLowerCase();
+        const isDone = status === 'completed' || status === 'succeeded' || status === 'done' || data.result || data.url || data.video_url;
+
+        if (isDone) {
+          clearCurrentPoll();
+
+          let videoUrl = null;
+          if (data.result?.url) videoUrl = data.result.url;
+          else if (data.url) videoUrl = data.url;
+          else if (data.video_url) videoUrl = data.video_url;
+          else if (data.output?.url) videoUrl = data.output.url;
+
+          if (videoUrl) {
+            // Jump to 100% on success
+            if (onUpdate) onUpdate(data, elapsed, attempts, 100);
+            resolve({ url: videoUrl, raw: data });
+          } else {
+            reject(new Error('Video generado pero no se encontró la URL'));
+          }
+          return;
+        }
+
+        if (status === 'failed' || status === 'error' || status === 'cancelled') {
+          clearCurrentPoll();
+          reject(new Error(data.error || `Generación fallida (${status})`));
+          return;
+        }
+
+        if (attempts >= maxAttempts) {
+          clearCurrentPoll();
+          reject(new Error('Tiempo de espera agotado.'));
+          return;
+        }
+
+      } catch (err) {
+        console.warn('Polling attempt error', err);
+        if (attempts >= maxAttempts) {
+          clearCurrentPoll();
+          reject(err);
+        }
+      }
+    }, intervalMs);
+  });
+}
+
+// Generate Video with REAL polling
+async function generateVideo() {
+  const raw = document.getElementById('video-prompt').value.trim();
+  if (!raw) return alert('Prompt requerido');
+  const prompt = getEffectivePrompt(raw, 'video');
+
+  const model = getSelectedModel('video');
+  const statusPanel = document.getElementById('status-panel');
+  const gen = document.getElementById('generating-state');
+  const res = document.getElementById('result-state');
+  const pollingStatus = document.getElementById('polling-status');
+  const generatingText = document.getElementById('generating-text');
+
+  clearCurrentPoll();
+
+  statusPanel.classList.remove('hidden');
+  gen.classList.remove('hidden');
+  res.classList.add('hidden');
+  if (pollingStatus) pollingStatus.textContent = '';
+
+  const duration = document.getElementById('video-duration')?.value || 8;
+  const aspect = document.getElementById('video-aspect')?.value || '16:9';
+  const resolution = document.getElementById('video-res')?.value || '720p';
+
+  lastGenerationParams = { type: 'video', prompt, model, params: { duration, aspect, resolution } };
+
+  try {
+    let endpoint = '/xai/video';
+    let body = { prompt, duration: Number(duration), aspect_ratio: aspect, resolution };
+    let isVeo = false;
+
+    if (model === 'veo' || model === 'veo-fast') {
+      endpoint = '/veo/generate';
+      body = {
+        prompt,
+        durationSeconds: Number(duration),
+        aspectRatio: aspect,
+        resolution,
+        model: model === 'veo-fast' ? 'veo-3.0-fast-generate-001' : 'veo-3.0-generate-001'
+      };
+      isVeo = true;
+    }
+
+    if (generatingText) generatingText.textContent = `Generando con ${model.toUpperCase()}...`;
+
+    const startRes = await fetch(`${WORKER}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const startData = await startRes.json();
+
+    const requestId = startData.id || startData.request_id || startData.name || startData.operation || startData.requestId;
+    if (!requestId) throw new Error('No se recibió ID de la generación');
+
+    document.getElementById('request-id').textContent = `ID: ${requestId} • ${model}`;
+
+    // Show the cinematic video preview + progress bar
+    showVideoGeneratingPreview();
+
+    // Real polling with progress bar
+    const pollPromise = pollUntilDone(
+      requestId,
+      isVeo,
+      (data, elapsedSeconds, attempt, progress) => {
+        const status = (data.status || data.state || 'processing').toLowerCase();
+        
+        // Estimate remaining time (rough, based on progress)
+        let remainingText = '';
+        if (progress && progress > 5) {
+          const estimatedTotal = Math.round(elapsedSeconds / (progress / 100));
+          const remaining = Math.max(0, estimatedTotal - elapsedSeconds);
+          remainingText = ` • ~${remaining}s restantes`;
+        }
+
+        if (pollingStatus) {
+          pollingStatus.textContent = `${status} • ${elapsedSeconds}s${remainingText}`;
+        }
+        if (generatingText) {
+          generatingText.textContent = `Procesando con ${model.toUpperCase()}...`;
+        }
+
+        // Drive the visual preview progress bar
+        if (progress !== undefined) {
+          updateVideoProgress(progress, `${status}`);
+        }
+      }
+    );
+
+    const result = await pollPromise;
+
+    // Success - hide the loading preview and show the real video
+    hideVideoGeneratingPreview();
+    gen.classList.add('hidden');
+    showResult('video', result.url, prompt, model, { duration, aspect, resolution });
+
+  } catch (e) {
+    clearCurrentPoll();
+    hideVideoGeneratingPreview();
+    alert('Error durante la generación: ' + (e.message || e));
+    statusPanel.classList.add('hidden');
+  }
+}
+
+async function generateImage() {
+  const raw = document.getElementById('image-prompt').value.trim();
+  if (!raw) return alert('Prompt requerido');
+  const prompt = getEffectivePrompt(raw, 'image');
+  const model = getSelectedModel('image');
+
+  const status = document.getElementById('status-panel');
+  const gen = document.getElementById('generating-state');
+  const res = document.getElementById('result-state');
+  status.classList.remove('hidden'); gen.classList.remove('hidden'); res.classList.add('hidden');
+
+  // Show loading mosaic for images
+  showImageGeneratingPreview(count);
+
+  try {
+    let endpoint = '/xai/image';
+    let body = { prompt, n: count };
+
+    if (model.includes('imagen')) {
+      endpoint = '/imagen/generate';
+      body = { prompt, numberOfImages: count, aspectRatio: aspect };
+    }
+
+    // Quick fake progress on the 4 bars while the request is in flight
+    const progressInterval = setInterval(() => {
+      for (let i = 0; i < Math.min(count, 4); i++) {
+        const p = Math.random() * 70 + 20;
+        updateImageProgress(i, p);
+      }
+    }, 120);
+
+    const r = await fetch(`${WORKER}${endpoint}`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    clearInterval(progressInterval);
+
+    const data = await r.json();
+
+    let urls = [];
+    if (data.data?.length) urls = data.data.map(x => x.url);
+    else if (data.predictions) urls = data.predictions.map(() => `https://picsum.photos/id/${Math.floor(Math.random()*100)}/800/800`).slice(0, count);
+    else urls = Array(count).fill(0).map((_,i) => `https://picsum.photos/id/${20+i}/800/800`);
+
+    hideImageGeneratingPreview();
+    gen.classList.add('hidden'); res.classList.remove('hidden');
+    document.getElementById('result-title').textContent = 'Imágenes listas';
+    document.getElementById('result-content').innerHTML = urls.map(u => `<img src="${u}" class="rounded-2xl mb-2 w-full">`).join('');
+    window.currentResult = { url: urls[0], type: 'image' };
+  } catch(e){ 
+    hideImageGeneratingPreview();
+    alert(e.message); 
+    status.classList.add('hidden'); 
+  }
+}
+
+async function generateAudio() {
+  const raw = document.getElementById('audio-prompt').value.trim();
+  if (!raw) return alert('Texto requerido');
+  const text = getEffectivePrompt(raw, 'audio');
+  const model = getSelectedModel('audio');
+
+  const status = document.getElementById('status-panel');
+  status.classList.remove('hidden');
+  document.getElementById('generating-state').classList.remove('hidden');
+  document.getElementById('result-state').classList.add('hidden');
+
+  try {
+    const r = await fetch(`${WORKER}/tts`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ text, voice_id: 'EXAVITQu4vr4xnSDxMaL' }) });
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+
+    document.getElementById('generating-state').classList.add('hidden');
+    document.getElementById('result-state').classList.remove('hidden');
+    document.getElementById('result-title').textContent = 'Audio listo';
+    document.getElementById('result-content').innerHTML = `<audio controls class="w-full" src="${url}"></audio>`;
+    window.currentResult = { url, type: 'audio' };
+  } catch(e) { alert('Error audio: ' + e.message); }
+}
+
+async function generateMusic() {
+  const raw = document.getElementById('music-prompt').value.trim();
+  if (!raw) return alert('Prompt requerido');
+  const prompt = getEffectivePrompt(raw, 'music');
+  const lyrics = document.getElementById('music-lyrics')?.value || '';
+
+  const status = document.getElementById('status-panel');
+  status.classList.remove('hidden');
+  document.getElementById('generating-state').classList.remove('hidden');
+
+  try {
+    const r = await fetch(`${WORKER}/lyria3/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, lyrics, singer_profile: 'voz femenina cálida' })
+    });
+    const data = await r.json();
+    const audioB64 = data.audio;
+
+    document.getElementById('generating-state').classList.add('hidden');
+    document.getElementById('result-state').classList.remove('hidden');
+    document.getElementById('result-title').textContent = 'Música lista';
+    document.getElementById('result-content').innerHTML = `<audio controls class="w-full" src="data:audio/wav;base64,${audioB64}"></audio>`;
+    window.currentResult = { url: `data:audio/wav;base64,${audioB64}`, type: 'music' };
+  } catch(e) { alert('Error música: ' + e.message); }
+}
+
+async function generateMusicLyrics() {
+  const prompt = document.getElementById('music-prompt').value.trim() || 'balada emocional';
+  try {
+    const r = await fetch(`${WORKER}/llm/lyrics`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ brief: { cliente: 'Pixeria', uso: 'cartelería', emocion: ['emocional'] } }) });
+    const data = await r.json();
+    const ta = document.getElementById('music-lyrics') || document.createElement('textarea');
+    if (!document.getElementById('music-lyrics')) {
+      // fallback
+      alert('Letra generada (copia):\n' + (data.text || 'Letra lista'));
+    } else {
+      ta.value = data.text || 'Letra generada con Grok';
+    }
+  } catch(e) { alert('Error generando letra'); }
+}
+
+function downloadResult() {
+  if (!window.currentResult?.url) return;
+  const a = document.createElement('a');
+  a.href = window.currentResult.url;
+  a.download = `pixeria-${Date.now()}`;
+  a.click();
+}
+
+function resetAll() {
+  document.getElementById('status-panel').classList.add('hidden');
+}
+
+function initCrear() {
+  // Visual model cards for all 4
+  createModelCards('video', 'video-models');
+  createModelCards('image', 'image-models');
+  createModelCards('audio', 'audio-models');
+  createModelCards('music', 'music-models');
+
+  // Examples (simple)
+  console.log('%c[Crear] Página lista con 4 secciones visuales + parámetros dinámicos.', 'color:#888');
+}
+
+document.addEventListener('DOMContentLoaded', initCrear);
+</script>
+
+<script>
+const WORKER = 'https://pixer-eleven.csilvasantin.workers.dev';
+
+let currentRequestId = null;
+let pollInterval = null;
+
+function updateDurationLabel(val) {
+  const label = document.getElementById('duration-label');
+  if (label) label.textContent = val + 's';
+}
+
+function setupAspectButtons() {
+  const buttons = document.querySelectorAll('.aspect-btn');
+  let selected = '16:9';
+
+  buttons.forEach(btn => {
+    if (btn.dataset.aspect === selected) {
+      btn.classList.add('!border-orange', '!bg-orange', '!text-white');
+    }
+
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('!border-orange', '!bg-orange', '!text-white'));
+      btn.classList.add('!border-orange', '!bg-orange', '!text-white');
+      selected = btn.dataset.aspect;
+    });
+  });
+}
+
+function setupExamples() {
+  const container = document.getElementById('examples');
+  const examples = [
+    "Bienvenida cálida en un hotel boutique de Barcelona al atardecer, luces suaves y movimiento elegante",
+    "Producto premium girando lentamente sobre fondo oscuro con iluminación volumétrica y reflejos",
+    "Escena motivacional en un gimnasio moderno: persona entrenando con movimiento fluido y atmósfera inspiradora"
+  ];
+
+  examples.forEach((ex, i) => {
+    const div = document.createElement('div');
+    div.className = 'p-4 rounded-2xl border border-cream-100 hover:border-orange cursor-pointer text-sm bg-white transition-colors';
+    div.textContent = ex;
+    div.onclick = () => {
+      document.getElementById('prompt').value = ex;
+      window.scrollTo({ top: 200, behavior: 'smooth' });
+    };
+    container.appendChild(div);
+  });
+}
+
+async function generateVideo() {
+  const promptEl = document.getElementById('prompt');
+  const prompt = promptEl.value.trim();
+  if (!prompt) {
+    alert('Por favor escribe una descripción del vídeo.');
+    return;
+  }
+
+  const duration = document.getElementById('duration').value;
+  const aspectBtn = document.querySelector('.aspect-btn.\\!border-orange') || document.querySelector('[data-aspect="16:9"]');
+  const aspect = aspectBtn ? aspectBtn.dataset.aspect : '16:9';
+  const resolution = document.getElementById('resolution').value;
+
+  const btn = document.getElementById('generate-btn');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Enviando a Grok...';
+
+  const statusPanel = document.getElementById('status-panel');
+  const generating = document.getElementById('generating-state');
+  const result = document.getElementById('result-state');
+
+  statusPanel.classList.remove('hidden');
+  generating.classList.remove('hidden');
+  result.classList.add('hidden');
+
+  try {
+    const startRes = await fetch(`${WORKER}/xai/video`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        duration: parseInt(duration),
+        aspect_ratio: aspect,
+        resolution
+      })
+    });
+
+    const startData = await startRes.json();
+    
+    // xAI usually returns { id: "..." } or { request_id: "..." }
+    const requestId = startData.id || startData.request_id || startData.requestId;
+    
+    if (!requestId) {
+      throw new Error('No se recibió request_id de Grok');
+    }
+
+    currentRequestId = requestId;
+    document.getElementById('request-id').textContent = 'Request ID: ' + requestId;
+
+    btn.innerHTML = 'Generando con Grok...';
+
+    // Start polling
+    await pollForVideo(requestId, prompt);
+
+  } catch (err) {
+    alert('Error generando el vídeo: ' + err.message);
+    statusPanel.classList.add('hidden');
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+}
+
+async function pollForVideo(requestId, originalPrompt) {
+  const generating = document.getElementById('generating-state');
+  const result = document.getElementById('result-state');
+  const videoEl = document.getElementById('result-video');
+  const downloadBtn = document.getElementById('download-btn');
+  const usedPrompt = document.getElementById('used-prompt');
+
+  const maxAttempts = 40; // ~ 3-4 minutes max
+  let attempts = 0;
+
+  const interval = setInterval(async () => {
+    attempts++;
+    if (attempts > maxAttempts) {
+      clearInterval(interval);
+      alert('La generación está tardando más de lo esperado. Puedes seguir sondeando manualmente o intentarlo de nuevo.');
+      return;
+    }
+
+    try {
+      const pollRes = await fetch(`${WORKER}/xai/video/${requestId}`);
+      const data = await pollRes.json();
+
+      // Flexible parsing of xAI response
+      const status = data.status || data.state || (data.result ? 'completed' : 'processing');
+      
+      if (status === 'completed' || status === 'succeeded' || data.result?.url || data.url) {
+        clearInterval(interval);
+        
+        const videoUrl = data.result?.url || data.url || data.video_url || data.output?.url;
+        
+        if (!videoUrl) {
+          console.log('Poll response:', data);
+          alert('El vídeo se generó pero no encontramos la URL. Revisa la consola.');
+          return;
+        }
+
+        // Success!
+        videoEl.src = videoUrl;
+        downloadBtn.href = videoUrl;
+        usedPrompt.textContent = originalPrompt;
+
+        generating.classList.add('hidden');
+        result.classList.remove('hidden');
+
+        // Scroll to result
+        document.getElementById('status-panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } else if (status === 'failed' || status === 'error') {
+        clearInterval(interval);
+        alert('La generación falló. Prueba con un prompt diferente o más corto.');
+        document.getElementById('status-panel').classList.add('hidden');
+      }
+      // else keep polling (processing, queued, etc.)
+
+    } catch (e) {
+      console.warn('Polling error', e);
+    }
+  }, 4500);
+}
+
+function resetGenerator() {
+  const statusPanel = document.getElementById('status-panel');
+  const videoEl = document.getElementById('result-video');
+
+  statusPanel.classList.add('hidden');
+  videoEl.src = '';
+
+  // Clear prompt if user wants fresh start
+  // document.getElementById('prompt').value = '';
+  document.getElementById('generate-btn').disabled = false;
+  document.getElementById('generate-btn').innerHTML = 'Generar con Grok';
+}
+
+// Init
+function initCrear() {
+  setupAspectButtons();
+  setupExamples();
+
+  // Default aspect button styling
+  const defaultAspect = document.querySelector('[data-aspect="16:9"]');
+  if (defaultAspect) {
+    defaultAspect.classList.add('!border-orange', '!bg-orange', '!text-white');
+  }
+
+  // Duration label init
+  const dur = document.getElementById('duration');
+  if (dur) {
+    document.getElementById('duration-label').textContent = dur.value + 's';
+    dur.addEventListener('input', (e) => {
+      document.getElementById('duration-label').textContent = e.target.value + 's';
+    });
+  }
+
+  // Allow Enter in prompt to trigger (with Shift+Enter for newline)
+  const promptEl = document.getElementById('prompt');
+  if (promptEl) {
+    promptEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        generateVideo();
+      }
+    });
+  }
+
+  // Keyboard shortcut hint
+  console.log('%c[Pixeria Crear] Tip: Presiona Enter en el prompt para generar (Shift+Enter para salto de línea)', 'color:#888');
+
+  // === Segmentados bridge: restore audience targeting chosen on /segmentados ===
+  if (typeof initSegmentsFromStorage === 'function') {
+    initSegmentsFromStorage();
+  }
+
+  // Optional: if coming from the segmented page, pre-open a specific tab/kind
+  try {
+    const openKind = localStorage.getItem('pixer_open_kind');
+    if (openKind) {
+      localStorage.removeItem('pixer_open_kind');
+      // focus the relevant textarea as a hint
+      const map = { video: 'video-prompt', image: 'image-prompt', audio: 'audio-prompt', music: 'music-prompt' };
+      const el = document.getElementById(map[openKind] || 'video-prompt');
+      if (el) setTimeout(() => el.focus(), 350);
+    }
+  } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', initCrear);
+</script>

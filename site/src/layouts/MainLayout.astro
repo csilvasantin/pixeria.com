@@ -41,16 +41,22 @@ const isSpanish = lang === 'es';
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-8 text-sm">
-          <a href="#producto" class="hover:text-orange transition-colors">
+          <a href="#producto" class="hover:text-orange transition-colors" data-god="nav.product">
             {isSpanish ? 'El Producto' : 'The Product'}
           </a>
-          <a href="#como-funciona" class="hover:text-orange transition-colors">
+          <a href="#como-funciona" class="hover:text-orange transition-colors" data-god="nav.how">
             {isSpanish ? 'Cómo funciona' : 'How it works'}
           </a>
-          <a href="#ejemplos" class="hover:text-orange transition-colors">
+          <a href="/crear/" class="hover:text-orange transition-colors font-medium" data-god="nav.crear">
+            {isSpanish ? 'Crear con Grok' : 'Create with Grok'}
+          </a>
+          <a href="/segmentados/" class="hover:text-orange transition-colors font-medium" data-god="nav.segmented">
+            {isSpanish ? 'Contenidos segmentados' : 'Segmented Content'}
+          </a>
+          <a href="#ejemplos" class="hover:text-orange transition-colors" data-god="nav.examples">
             {isSpanish ? 'Ejemplos' : 'Examples'}
           </a>
-          <a href="#estilo" class="hover:text-orange transition-colors font-medium">
+          <a href="#estilo" class="hover:text-orange transition-colors font-medium" data-god="nav.style">
             {isSpanish ? 'Nuestro estilo' : 'Our Style'}
           </a>
         </div>
@@ -76,6 +82,7 @@ const isSpanish = lang === 'es';
           <a 
             href="#acceso" 
             class="px-5 py-2 rounded-full bg-orange text-cream-50 text-sm font-medium hover:bg-orange-dark transition-colors"
+            data-god="nav.access"
           >
             {isSpanish ? 'Acceder' : 'Get Access'}
           </a>
@@ -96,11 +103,75 @@ const isSpanish = lang === 'es';
             <span class="text-cream-50">PixerIA</span>
           </div>
           
-          <div class="text-cream-100/60">
+          <div class="text-cream-100/60" data-god="footer.tagline">
             © {new Date().getFullYear()} PixerIA. {isSpanish ? 'Contenido que cuenta historias.' : 'Content that tells stories.'}
           </div>
         </div>
       </div>
     </footer>
+
+    <!-- GOD MODE — Live text overrides from /god (secure, only affects public pages) -->
+    <script>
+      (function() {
+        // Don't run on the God editor itself
+        if (location.pathname.startsWith('/god')) return;
+
+        const WORKER = 'https://pixer-eleven.csilvasantin.workers.dev';
+
+        function applyValue(el, value) {
+          if (!el || value == null) return;
+          const useHtml = el.hasAttribute('data-god-html');
+          if (useHtml) {
+            el.innerHTML = String(value);
+          } else {
+            el.textContent = String(value);
+          }
+        }
+
+        function applyOverrides(overrides) {
+          if (!overrides || typeof overrides !== 'object') return;
+
+          function walk(obj, prefix = '') {
+            for (const [key, val] of Object.entries(obj)) {
+              const path = prefix ? `${prefix}.${key}` : key;
+
+              if (val && typeof val === 'object' && !Array.isArray(val)) {
+                walk(val, path);
+              } else if (Array.isArray(val)) {
+                val.forEach((item, index) => {
+                  if (item && typeof item === 'object') {
+                    walk(item, `${path}.${index}`);
+                  } else {
+                    // primitive in array (rare)
+                    applyToPath(`${path}.${index}`, item);
+                  }
+                });
+              } else {
+                applyToPath(path, val);
+              }
+            }
+          }
+
+          function applyToPath(path, value) {
+            const selector = `[data-god="${path}"]`;
+            document.querySelectorAll(selector).forEach(el => applyValue(el, value));
+          }
+
+          walk(overrides);
+        }
+
+        // Fetch and apply God Mode overrides
+        fetch(`${WORKER}/god/content`, { cache: 'no-store' })
+          .then(r => r.ok ? r.json() : null)
+          .then(ov => {
+            if (ov) {
+              applyOverrides(ov);
+              // Optional: expose for debugging or God preview reuse
+              window.PIXER_OVERRIDES = ov;
+            }
+          })
+          .catch(() => { /* silent fail — use baked content */ });
+      })();
+    </script>
   </body>
 </html>

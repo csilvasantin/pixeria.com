@@ -68,3 +68,20 @@ a, button {
     rgba(253, 248, 243, 0.1) 100%
   );
 }
+
+/* Segmented content pills & cards (used in /crear and /segmentados) */
+.seg-card.active, .seg-pill.active,
+.segment-card.active, .segment-pill.active {
+  border-color: #E07A3D;
+  background-color: rgba(224, 122, 61, 0.06);
+  box-shadow: 0 0 0 1px rgba(224, 122, 61, 0.15);
+}
+.seg-card:not(.active), .seg-pill:not(.active),
+.segment-card:not(.active), .segment-pill:not(.active) {
+  opacity: 0.72;
+}
+.seg-card, .seg-pill,
+.segment-card, .segment-pill {
+  transition: all 0.1s ease;
+  user-select: none;
+}

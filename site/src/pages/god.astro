@@ -1,0 +1,780 @@
+---
+/**
+ * MODO GOD — Pixeria.com
+ * 
+ * Solo Carlos puede acceder y guardar.
+ * El token secreto se valida exclusivamente en el Worker (nunca viaja en el HTML público).
+ * 
+ * Acceso recomendado: https://pixeria.com/god   + introduce el token cuando te lo pida el panel.
+ */
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MODO GOD • Pixeria</title>
+  <meta name="robots" content="noindex,nofollow">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@600&amp;family=Inter:wght@400;500;600&amp;display=swap');
+    
+    :root {
+      --cream: #FDF8F3;
+      --orange: #E07A3D;
+      --charcoal: #1F2529;
+    }
+    
+    body { font-family: 'Inter', system_ui, sans-serif; }
+    .heading { font-family: 'Instrument Serif', Georgia, serif; letter-spacing: -0.025em; }
+    
+    .god-panel {
+      background: #111518;
+      border: 1px solid #2a3137;
+    }
+    
+    .field-label {
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #6b7280;
+      font-weight: 600;
+    }
+    
+    .god-input, .god-textarea {
+      background: #0a0d10;
+      border: 1px solid #2a3137;
+      color: #e5e7eb;
+      font-size: 14px;
+      transition: border-color .1s ease;
+    }
+    .god-input:focus, .god-textarea:focus {
+      border-color: #E07A3D;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(224, 122, 61, 0.1);
+    }
+    
+    .section-header {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #E07A3D;
+      font-weight: 700;
+    }
+    
+    .preview-frame {
+      background: #0b1418;
+      box-shadow: 0 10px 30px -15px rgb(0 0 0 / 0.6);
+    }
+    
+    .god-btn {
+      background: #E07A3D;
+      color: white;
+      font-weight: 600;
+      transition: all .1s ease;
+    }
+    .god-btn:hover { background: #c55e2a; transform: translateY(-1px); }
+    .god-btn:disabled { opacity: .5; transform: none; }
+    
+    .ghost-btn {
+      background: transparent;
+      border: 1px solid #374151;
+      color: #9ca3af;
+    }
+    .ghost-btn:hover { background: #1f2529; color: #e5e7eb; }
+    
+    .text-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    
+    .live-dot {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0d10] text-[#e5e7eb]">
+  <!-- Top bar -->
+  <div class="border-b border-white/10 bg-black/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded bg-[#E07A3D] flex items-center justify-center">
+          <span class="text-white font-bold tracking-tighter text-xl">P</span>
+        </div>
+        <div>
+          <span class="font-semibold tracking-tight">MODO GOD</span>
+          <span class="text-[#E07A3D] text-xs ml-1.5 align-super">PIXERIA</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3 text-sm">
+        <div id="status" class="px-3 py-1 rounded-full bg-white/5 text-xs flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 live-dot"></span>
+          <span id="status-text">Desconectado — introduce token</span>
+        </div>
+        
+        <button onclick="exportJSON()" class="ghost-btn px-4 py-1.5 text-xs rounded-lg">Exportar JSON</button>
+        <button onclick="importJSON()" class="ghost-btn px-4 py-1.5 text-xs rounded-lg">Importar JSON</button>
+        <button onclick="resetToDefaults()" class="ghost-btn px-4 py-1.5 text-xs rounded-lg text-red-400/80 hover:text-red-400">Reset defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-6">
+    <!-- Gate -->
+    <div id="gate" class="max-w-md mx-auto mt-12 god-panel rounded-3xl p-8">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center gap-2 text-[#E07A3D] text-xs tracking-[2px] font-semibold mb-2">SOLO TÚ</div>
+        <h1 class="text-3xl heading tracking-tighter">Modo Dios</h1>
+        <p class="text-sm text-white/50 mt-2">Editor de todos los textos de pixeria.com.<br>Los cambios se guardan de forma segura en R2 a través del Worker.</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="field-label block mb-1.5">GOD MODE TOKEN</label>
+          <input id="token-input" type="password" class="god-input w-full px-4 py-3 rounded-2xl font-mono text-sm" 
+                 placeholder="pégalo aquí (nunca se guarda en el navegador)">
+        </div>
+        
+        <button onclick="unlockGodMode()" 
+                class="god-btn w-full py-3.5 rounded-2xl text-base">
+          Entrar en Modo God
+        </button>
+        
+        <p class="text-[10px] text-center text-white/40">
+          El token se valida solo en el Worker. Este panel no funciona sin él.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Editor (hidden until unlocked) -->
+    <div id="editor" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="section-header">Editor en vivo</span>
+            <span id="save-indicator" class="text-[10px] px-2 py-px rounded bg-emerald-500/10 text-emerald-400 hidden">Guardado</span>
+          </div>
+          <div class="text-white/60 text-sm">Edita cualquier campo. Los cambios se reflejan en la vista previa al instante.</div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <button onclick="applyToPreview()" class="ghost-btn px-5 py-2 text-sm rounded-2xl">Actualizar vista previa</button>
+          <button onclick="pushToWorker()" class="god-btn px-6 py-2 text-sm rounded-2xl flex items-center gap-2">
+            <span>GUARDAR EN GOD</span>
+            <span class="text-xs opacity-75">(Worker + R2)</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Editor Column -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Meta -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Meta / SEO</div>
+            <div class="space-y-4">
+              <div class="text-row">
+                <div class="field-label pt-2">Título</div>
+                <input data-path="meta.title" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+              </div>
+              <div class="text-row">
+                <div class="field-label pt-2">Descripción</div>
+                <textarea data-path="meta.description" class="god-textarea w-full px-3 py-2 rounded-xl h-16" oninput="liveUpdate(this)"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Hero</div>
+            <div class="space-y-4">
+              <div class="text-row">
+                <div class="field-label pt-2">Badge</div>
+                <input data-path="hero.badge" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+              </div>
+              <div class="text-row">
+                <div class="field-label pt-2">Título (HTML ok)</div>
+                <textarea data-path="hero.title" class="god-textarea w-full px-3 py-2 rounded-xl h-14" oninput="liveUpdate(this)"></textarea>
+              </div>
+              <div class="text-row">
+                <div class="field-label pt-2">Subtítulo (HTML ok)</div>
+                <textarea data-path="hero.subtitle" class="god-textarea w-full px-3 py-2 rounded-xl h-16" oninput="liveUpdate(this)"></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label mb-1">CTA Principal</div>
+                  <input data-path="hero.ctaPrimary" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+                <div>
+                  <div class="field-label mb-1">CTA Secundario</div>
+                  <input data-path="hero.ctaSecondary" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+              </div>
+              <div class="text-row">
+                <div class="field-label pt-2">Integrado label</div>
+                <input data-path="hero.integrated" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Problem -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">El Problema</div>
+            <div class="space-y-4">
+              <div class="text-row"><div class="field-label pt-2">Eyebrow</div><input data-path="problem.eyebrow" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)"></div>
+              <div class="text-row"><div class="field-label pt-2">Título</div><textarea data-path="problem.title" class="god-textarea w-full px-3 py-2 rounded-xl h-12" oninput="liveUpdate(this)"></textarea></div>
+              <div class="text-row"><div class="field-label pt-2">Párrafo 1</div><textarea data-path="problem.p1" class="god-textarea w-full px-3 py-2 rounded-xl h-12" oninput="liveUpdate(this)"></textarea></div>
+              <div class="text-row"><div class="field-label pt-2">Párrafo 2</div><textarea data-path="problem.p2" class="god-textarea w-full px-3 py-2 rounded-xl h-12" oninput="liveUpdate(this)"></textarea></div>
+              <div class="text-row"><div class="field-label pt-2">Párrafo final</div><textarea data-path="problem.p3" class="god-textarea w-full px-3 py-2 rounded-xl h-12" oninput="liveUpdate(this)"></textarea></div>
+            </div>
+          </div>
+
+          <!-- How it works steps -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4 flex items-center justify-between">
+              <span>Cómo funciona (3 pasos)</span>
+            </div>
+            <div id="how-steps-editor" class="space-y-6"></div>
+          </div>
+
+          <!-- Radar (from vision) -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Radar de Modelos (visión actual)</div>
+            <div id="radar-editor" class="space-y-3"></div>
+            <button onclick="addRadarModel()" class="mt-3 text-xs px-3 py-1 rounded border border-white/20 hover:bg-white/5">+ Añadir modelo</button>
+          </div>
+
+          <!-- Formatos VITMO -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Formatos (V I A T M O)</div>
+            <div id="formats-editor" class="space-y-3"></div>
+          </div>
+
+          <!-- Método -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Método Pixeria (4 pasos)</div>
+            <div id="method-editor" class="space-y-3"></div>
+          </div>
+
+          <!-- Contenidos Segmentados -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Contenidos segmentados (Omnypublicity + Gemelo)</div>
+            <div class="space-y-4">
+              <div class="text-row"><div class="field-label pt-2">Título página</div><input data-path="segmented.title" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)"></div>
+              <div class="text-row"><div class="field-label pt-2">Subtítulo / intro</div><textarea data-path="segmented.subtitle" class="god-textarea w-full px-3 py-2 rounded-xl h-16" oninput="liveUpdate(this)"></textarea></div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label mb-1">Tipo publicidad (título)</div>
+                  <input data-path="segmented.locationTitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+                <div>
+                  <div class="field-label mb-1">Género (título)</div>
+                  <input data-path="segmented.genderTitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label mb-1">Exterior label</div>
+                  <input data-path="segmented.exteriorLabel" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+                <div>
+                  <div class="field-label mb-1">Interior label</div>
+                  <input data-path="segmented.interiorLabel" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+              </div>
+              <div>
+                <div class="field-label mb-1">Rango edad (título)</div>
+                <input data-path="segmented.ageTitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label mb-1">Inventario título</div>
+                  <input data-path="segmented.inventoryTitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+                <div>
+                  <div class="field-label mb-1">Inventario subtítulo</div>
+                  <input data-path="segmented.inventorySubtitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label mb-1">Ideas sugeridas título</div>
+                  <input data-path="segmented.suggestedTitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+                <div>
+                  <div class="field-label mb-1">Prompt box título</div>
+                  <input data-path="segmented.promptTitle" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label mb-1">Botón principal</div>
+                  <input data-path="segmented.ctaGenerate" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+                <div>
+                  <div class="field-label mb-1">Botón copiar</div>
+                  <input data-path="segmented.ctaCopy" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Access CTA -->
+          <div class="god-panel rounded-3xl p-6">
+            <div class="section-header mb-4">Acceso anticipado</div>
+            <div class="space-y-4">
+              <div class="text-row"><div class="field-label pt-2">Título</div><textarea data-path="access.title" class="god-textarea w-full px-3 py-2 rounded-xl h-14" oninput="liveUpdate(this)"></textarea></div>
+              <div class="text-row"><div class="field-label pt-2">Cuerpo</div><textarea data-path="access.body" class="god-textarea w-full px-3 py-2 rounded-xl h-16" oninput="liveUpdate(this)"></textarea></div>
+              <div class="text-row"><div class="field-label pt-2">Texto del botón</div><input data-path="access.cta" class="god-input w-full px-3 py-2 rounded-xl" oninput="liveUpdate(this)"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Live Preview Column -->
+        <div class="lg:col-span-5">
+          <div class="sticky top-20">
+            <div class="flex items-center justify-between mb-2 px-1">
+              <div class="section-header">Vista previa (actualizada en vivo)</div>
+              <button onclick="applyToPreview()" class="text-[10px] px-2 py-0.5 rounded bg-white/10 hover:bg-white/15">Refrescar</button>
+            </div>
+            
+            <div id="preview" class="preview-frame rounded-3xl overflow-hidden border border-white/10 text-sm shadow-2xl max-h-[82vh] overflow-auto">
+              <!-- Populated by JS to match the real site sections -->
+              <div class="p-6 bg-[#0D3B66] text-white">
+                <div id="preview-badge" class="inline-block mb-3 px-3 py-0.5 text-[10px] rounded-full bg-white/90 text-[#1F2529] tracking-widest"></div>
+                <div id="preview-hero-title" class="text-4xl leading-none tracking-[-2.5px] font-semibold mb-3"></div>
+                <div id="preview-hero-subtitle" class="text-white/80 text-sm leading-snug mb-5"></div>
+                <div class="flex gap-2">
+                  <div id="preview-cta1" class="px-4 py-1.5 rounded-full bg-[#E07A3D] text-white text-xs font-medium inline-block"></div>
+                  <div id="preview-cta2" class="px-4 py-1.5 rounded-full bg-white/90 text-[#1F2529] text-xs font-medium inline-block"></div>
+                </div>
+              </div>
+              
+              <div class="p-6 bg-white text-[#1F2529]">
+                <div id="preview-problem" class="text-lg font-semibold leading-tight mb-2"></div>
+                <div id="preview-problem-body" class="text-xs text-[#4A535A] space-y-1"></div>
+              </div>
+
+              <div class="p-6 bg-white border-t text-[#1F2529]">
+                <div class="text-xs uppercase tracking-widest text-[#E07A3D] mb-1">CÓMO FUNCIONA</div>
+                <div id="preview-how-title" class="font-semibold text-lg mb-3"></div>
+                <div id="preview-steps" class="grid grid-cols-3 gap-3 text-[10px]"></div>
+              </div>
+
+              <div class="p-6 bg-white border-t text-xs">
+                <div class="uppercase tracking-widest text-[#E07A3D] mb-2 text-[10px]">FORMATOS</div>
+                <div id="preview-formats" class="grid grid-cols-2 gap-x-3 gap-y-2"></div>
+              </div>
+            </div>
+
+            <div class="mt-3 text-[10px] text-white/40 px-1">
+              Esta vista previa usa los mismos tokens visuales que el sitio real. 
+              Cambios en el editor se reflejan aquí al instante (botón "Actualizar vista previa" o escribe).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Raw JSON power user section -->
+      <div class="mt-8 god-panel rounded-3xl p-6">
+        <div class="flex items-center justify-between mb-3">
+          <div class="section-header">JSON completo (power user)</div>
+          <button onclick="syncFromRaw()" class="text-xs px-3 py-1 rounded bg-white/10">Sincronizar desde este JSON → editor</button>
+        </div>
+        <textarea id="raw-json" class="god-textarea w-full font-mono text-xs h-64 p-4 rounded-2xl" spellcheck="false"></textarea>
+        <div class="flex justify-end mt-2">
+          <button onclick="syncToRaw()" class="text-xs px-3 py-1 rounded bg-white/10">Actualizar JSON desde campos</button>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center text-[10px] text-white/40">
+        Seguridad: el token solo se envía al hacer “GUARDAR EN GOD”. El Worker valida contra el secret `GOD_MODE_TOKEN`.<br>
+        Nunca compartas el token. Cámbialo cuando quieras con <code>npx wrangler secret put GOD_MODE_TOKEN</code>.
+      </div>
+    </div>
+  </div>
+
+<script>
+let currentTexts = {};
+let tokenValue = '';
+
+// Tailwind script (already loaded via CDN above)
+function initTailwind() {
+  // Already using CDN, no extra needed
+}
+
+// Load from worker or local default
+async function loadInitialTexts() {
+  try {
+    const res = await fetch('https://pixer-eleven.csilvasantin.workers.dev/god/content');
+    if (res.ok) {
+      currentTexts = await res.json();
+      document.getElementById('status-text').textContent = 'Cargado desde R2 (God)';
+      return;
+    }
+  } catch(e) {}
+  
+  // Fallback to the baked JSON in the site
+  const res = await fetch('/src/data/pixeria-texts.json');
+  currentTexts = await res.json();
+  document.getElementById('status-text').textContent = 'Usando defaults locales';
+}
+
+function unlockGodMode() {
+  const input = document.getElementById('token-input');
+  if (!input.value.trim()) {
+    alert('Necesitas el token secreto de God Mode.');
+    return;
+  }
+  tokenValue = input.value.trim();
+  
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('editor').classList.remove('hidden');
+  
+  // populate editor
+  populateEditor();
+  syncToRaw();
+  applyToPreview();
+  
+  document.getElementById('status-text').textContent = 'God Mode activo — token cargado';
+  document.getElementById('status').classList.add('!bg-emerald-500/10', 'text-emerald-400');
+}
+
+function getByPath(obj, path) {
+  return path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj);
+}
+
+function setByPath(obj, path, value) {
+  const keys = path.split('.');
+  let o = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (!o[keys[i]] || typeof o[keys[i]] !== 'object') o[keys[i]] = {};
+    o = o[keys[i]];
+  }
+  o[keys[keys.length-1]] = value;
+}
+
+function liveUpdate(el) {
+  const path = el.dataset.path;
+  if (!path) return;
+  setByPath(currentTexts, path, el.value);
+  // auto refresh raw + preview on every keystroke for nice feel
+  syncToRaw(false);
+  // lightweight live for some fields
+  if (path.startsWith('hero.') || path.startsWith('problem.')) {
+    applyToPreview();
+  }
+}
+
+function populateEditor() {
+  // Simple fields
+  document.querySelectorAll('[data-path]').forEach(el => {
+    const path = el.dataset.path;
+    const val = getByPath(currentTexts, path);
+    if (val != null) el.value = typeof val === 'string' ? val : JSON.stringify(val);
+  });
+
+  // Dynamic arrays
+  renderHowSteps();
+  renderRadar();
+  renderFormats();
+  renderMethod();
+}
+
+function renderHowSteps() {
+  const container = document.getElementById('how-steps-editor');
+  container.innerHTML = '';
+  const steps = currentTexts.howItWorks?.steps || [];
+  
+  steps.forEach((step, idx) => {
+    const div = document.createElement('div');
+    div.className = 'border border-white/10 rounded-2xl p-4 bg-black/30';
+    div.innerHTML = `
+      <div class="flex gap-3">
+        <div class="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-xs font-mono flex-shrink-0 mt-0.5">${step.num || (idx+1)}</div>
+        <div class="flex-1 space-y-2">
+          <input class="god-input w-full px-3 py-1.5 rounded-xl text-sm" value="${step.title || ''}" 
+                 onchange="updateStep(${idx}, 'title', this.value)">
+          <textarea class="god-textarea w-full px-3 py-1.5 rounded-xl text-sm h-14" 
+                    onchange="updateStep(${idx}, 'body', this.value)">${step.body || ''}</textarea>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateStep(idx, key, value) {
+  if (!currentTexts.howItWorks) currentTexts.howItWorks = {steps:[]};
+  if (!currentTexts.howItWorks.steps[idx]) currentTexts.howItWorks.steps[idx] = {};
+  currentTexts.howItWorks.steps[idx][key] = value;
+  syncToRaw(false);
+  applyToPreview();
+}
+
+function renderRadar() {
+  const c = document.getElementById('radar-editor');
+  c.innerHTML = '';
+  (currentTexts.radar?.models || []).forEach((m, i) => {
+    const row = document.createElement('div');
+    row.className = 'flex gap-2 items-center';
+    row.innerHTML = `
+      <input value="${m.type || ''}" class="god-input px-2 py-1 rounded w-24 text-xs" placeholder="Tipo"
+             onchange="updateRadar(${i}, 'type', this.value)">
+      <input value="${m.name || ''}" class="god-input px-2 py-1 rounded flex-1 text-sm" placeholder="Nombre del modelo"
+             onchange="updateRadar(${i}, 'name', this.value)">
+      <input value="${m.note || ''}" class="god-input px-2 py-1 rounded flex-[2] text-xs" placeholder="Nota"
+             onchange="updateRadar(${i}, 'note', this.value)">
+      <button class="text-red-400/70 hover:text-red-400 px-1" onclick="removeRadar(${i})">×</button>
+    `;
+    c.appendChild(row);
+  });
+}
+
+function updateRadar(i, key, val) {
+  currentTexts.radar.models[i][key] = val;
+  syncToRaw(false);
+}
+
+function addRadarModel() {
+  if (!currentTexts.radar) currentTexts.radar = {models:[]};
+  currentTexts.radar.models.push({type: 'Nuevo', name: '', note: ''});
+  renderRadar();
+  syncToRaw(false);
+}
+
+function removeRadar(i) {
+  currentTexts.radar.models.splice(i,1);
+  renderRadar();
+  syncToRaw(false);
+}
+
+function renderFormats() {
+  const c = document.getElementById('formats-editor');
+  c.innerHTML = '';
+  (currentTexts.formats?.items || []).forEach((f, i) => {
+    const row = document.createElement('div');
+    row.className = 'grid grid-cols-12 gap-2';
+    row.innerHTML = `
+      <div class="col-span-1"><input value="${f.letter||''}" class="god-input w-full text-center px-2 py-1 rounded" onchange="updateFormat(${i},'letter',this.value)"></div>
+      <div class="col-span-3"><input value="${f.name||''}" class="god-input w-full px-2 py-1 rounded" onchange="updateFormat(${i},'name',this.value)"></div>
+      <div class="col-span-8"><input value="${f.desc||''}" class="god-input w-full px-2 py-1 rounded text-xs" onchange="updateFormat(${i},'desc',this.value)"></div>
+    `;
+    c.appendChild(row);
+  });
+}
+
+function updateFormat(i, k, v) {
+  currentTexts.formats.items[i][k] = v;
+  syncToRaw(false);
+}
+
+function renderMethod() {
+  const c = document.getElementById('method-editor');
+  c.innerHTML = '';
+  (currentTexts.method?.steps || []).forEach((s, i) => {
+    const row = document.createElement('div');
+    row.className = 'flex gap-2 mb-2';
+    row.innerHTML = `
+      <div class="w-6 text-center pt-1 text-xs font-mono text-white/50">${s.num}</div>
+      <input value="${s.name||''}" class="god-input flex-1 px-2 py-1 rounded text-sm" onchange="updateMethod(${i},'name',this.value)">
+      <input value="${s.desc||''}" class="god-input flex-[3] px-2 py-1 rounded text-xs" onchange="updateMethod(${i},'desc',this.value)">
+    `;
+    c.appendChild(row);
+  });
+}
+
+function updateMethod(i, k, v) {
+  currentTexts.method.steps[i][k] = v;
+  syncToRaw(false);
+}
+
+// Live preview renderer (matches the visual language of the real site)
+function applyToPreview() {
+  const t = currentTexts;
+  
+  // Hero
+  const badge = document.getElementById('preview-badge');
+  if (badge) badge.textContent = t.hero?.badge || '';
+  
+  const hTitle = document.getElementById('preview-hero-title');
+  if (hTitle) hTitle.innerHTML = t.hero?.title || '';
+  
+  const hSub = document.getElementById('preview-hero-subtitle');
+  if (hSub) hSub.innerHTML = t.hero?.subtitle || '';
+  
+  const c1 = document.getElementById('preview-cta1');
+  if (c1) c1.textContent = t.hero?.ctaPrimary || '';
+  const c2 = document.getElementById('preview-cta2');
+  if (c2) c2.textContent = t.hero?.ctaSecondary || '';
+
+  // Problem
+  const pTitle = document.getElementById('preview-problem');
+  if (pTitle) pTitle.innerHTML = t.problem?.title || '';
+  
+  const pBody = document.getElementById('preview-problem-body');
+  if (pBody) {
+    pBody.innerHTML = `
+      <div>${t.problem?.p1 || ''}</div>
+      <div>${t.problem?.p2 || ''}</div>
+      <div class="font-medium text-[#1F2529] mt-1">${t.problem?.p3 || ''}</div>
+    `;
+  }
+
+  // How
+  const howTitle = document.getElementById('preview-how-title');
+  if (howTitle) howTitle.innerHTML = t.howItWorks?.title || '';
+  
+  const stepsC = document.getElementById('preview-steps');
+  if (stepsC) {
+    stepsC.innerHTML = (t.howItWorks?.steps || []).map(s => `
+      <div class="bg-white/5 p-2 rounded">
+        <div class="font-mono text-[10px] text-white/60">${s.num}</div>
+        <div class="text-white text-xs font-medium leading-tight mt-0.5">${s.title}</div>
+      </div>
+    `).join('');
+  }
+
+  // Formats
+  const fmtC = document.getElementById('preview-formats');
+  if (fmtC) {
+    fmtC.innerHTML = (t.formats?.items || []).map(f => `
+      <div><span class="font-semibold text-[#E07A3D]">${f.letter}</span> <span class="font-medium">${f.name}</span><br><span class="text-[10px] text-white/50">${f.desc?.slice(0,70)}...</span></div>
+    `).join('');
+  }
+}
+
+function syncToRaw(updateEditorFields = true) {
+  const raw = document.getElementById('raw-json');
+  raw.value = JSON.stringify(currentTexts, null, 2);
+  if (updateEditorFields) {
+    // re-populate simple fields from currentTexts (in case arrays changed)
+    document.querySelectorAll('[data-path]').forEach(el => {
+      const path = el.dataset.path;
+      const val = getByPath(currentTexts, path);
+      if (val != null && typeof val === 'string') el.value = val;
+    });
+  }
+}
+
+function syncFromRaw() {
+  try {
+    currentTexts = JSON.parse(document.getElementById('raw-json').value);
+    populateEditor();
+    applyToPreview();
+  } catch(e) {
+    alert('JSON inválido: ' + e.message);
+  }
+}
+
+async function pushToWorker() {
+  if (!tokenValue) {
+    alert('Primero introduce el token en el panel de acceso.');
+    return;
+  }
+  const btns = document.querySelectorAll('button');
+  btns.forEach(b => b.disabled = true);
+  
+  const { saveGodContent } = await import('../lib/texts.ts'); // works because Astro serves it
+  
+  // We inline the save because the import path in a static page is easier to do directly
+  const res = await fetch('https://pixer-eleven.csilvasantin.workers.dev/god/save', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokenValue}`
+    },
+    body: JSON.stringify(currentTexts)
+  });
+  
+  btns.forEach(b => b.disabled = false);
+  
+  const indicator = document.getElementById('save-indicator');
+  
+  if (res.ok) {
+    indicator.classList.remove('hidden');
+    indicator.textContent = 'Guardado en R2 ✓';
+    setTimeout(() => indicator.classList.add('hidden'), 2200);
+    // refresh status
+    document.getElementById('status-text').textContent = 'Guardado correctamente en God (R2)';
+  } else {
+    const txt = await res.text().catch(() => '');
+    alert('Error guardando: ' + (txt || res.status));
+  }
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(currentTexts, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pixeria-texts.json';
+  a.click();
+}
+
+function importJSON() {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'application/json';
+  inp.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const txt = await file.text();
+    try {
+      currentTexts = JSON.parse(txt);
+      populateEditor();
+      syncToRaw();
+      applyToPreview();
+    } catch(err) {
+      alert('JSON inválido');
+    }
+  };
+  inp.click();
+}
+
+function resetToDefaults() {
+  if (!confirm('¿Volver a los textos por defecto del repo? (perderás cambios no guardados)')) return;
+  // reload the page — simplest way to get clean defaults
+  location.reload();
+}
+
+function updateStepFromPreview() {
+  // kept for future expansion
+}
+
+// Boot
+(async function init() {
+  initTailwind();
+  await loadInitialTexts();
+  
+  // Make currentTexts globally reachable for console tinkering (power user)
+  window.PIXER_GOD_TEXTS = currentTexts;
+  
+  // Keyboard shortcut: Cmd/Ctrl + S = push
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      if (!document.getElementById('editor').classList.contains('hidden')) {
+        pushToWorker();
+      }
+    }
+  });
+  
+  // Auto sync raw when user edits it manually
+  const raw = document.getElementById('raw-json');
+  if (raw) {
+    raw.addEventListener('input', () => {
+      // don't auto parse on every keystroke to avoid rage
+    });
+  }
+  
+  console.log('%c[God] Modo God listo. Escribe window.PIXER_GOD_TEXTS en consola si necesitas tocar algo a mano.', 'color:#555');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout 
+  title="Contenidos segmentados | PixerIA" 
+  description="Elige audiencia exacta. Contenidos que coinciden con el inventario real de Omnypublicity y el gemelo digital."
+  lang="es"
+>
+  <!-- HERO / INTRO (dark cinematic like Crear) -->
+  <section class="pt-20 pb-10 bg-[#0D3B66] text-white">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="flex items-center gap-2 text-xs tracking-[2px] mb-3 opacity-75">
+        <span>PIXERIA × OMNYPUBLICITY</span>
+        <span class="w-px h-3 bg-white/30"></span>
+        <span>GEMELO DIGITAL</span>
+      </div>
+
+      <h1 class="text-5xl md:text-6xl font-semibold tracking-[-2.5px] mb-4" data-god="segmented.title">
+        Contenidos segmentados
+      </h1>
+      <p class="max-w-3xl text-xl text-white/80" data-god="segmented.subtitle">
+        Elige a quién va dirigida tu comunicación. Los filtros coinciden exactamente con los circuitos que se venden en Omnypublicity y que ves en tiempo real en el gemelo digital (el globo 3D).
+      </p>
+
+      <div class="mt-6 flex items-center gap-3 text-sm">
+        <div class="px-3 py-1 bg-white/10 rounded-full">Exterior / Interior</div>
+        <div class="px-3 py-1 bg-white/10 rounded-full">Género</div>
+        <div class="px-3 py-1 bg-white/10 rounded-full">5 rangos de edad</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section class="max-w-6xl mx-auto px-6 pt-10">
+    <div class="bg-white rounded-3xl border border-cream-100 shadow p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div class="font-semibold text-xl tracking-tight">Define tu audiencia objetivo</div>
+        <button onclick="resetAllSegments()" 
+                class="text-xs px-4 py-2 rounded-full border border-orange/40 text-orange hover:bg-orange/5 transition"
+                data-god="segmented.ctaReset">
+          Reset filtros
+        </button>
+      </div>
+
+      <!-- Ubicación -->
+      <div class="mb-7">
+        <div class="uppercase text-[10px] tracking-[1.5px] text-charcoal mb-3 font-medium" data-god="segmented.locationTitle">Tipo de publicidad</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div onclick="toggleSeg(this, 'ubicacion', 'exterior')" 
+               class="seg-card flex gap-4 p-5 rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active"
+               id="seg-ubicacion-exterior">
+            <div class="flex-1">
+              <div class="font-semibold text-lg" data-god="segmented.exteriorLabel">Publicidad Exterior</div>
+              <div class="text-sm text-text-muted mt-1" data-god="segmented.exteriorDesc">Fuera del Xpacio (ej. pantalla de la puerta del Xtanco)</div>
+            </div>
+            <div class="text-4xl opacity-40">🌆</div>
+          </div>
+          <div onclick="toggleSeg(this, 'ubicacion', 'interior')" 
+               class="seg-card flex gap-4 p-5 rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active"
+               id="seg-ubicacion-interior">
+            <div class="flex-1">
+              <div class="font-semibold text-lg" data-god="segmented.interiorLabel">Publicidad Interior</div>
+              <div class="text-sm text-text-muted mt-1" data-god="segmented.interiorDesc">Dentro del Xpacio (ej. pantalla del Metahuman)</div>
+            </div>
+            <div class="text-4xl opacity-40">🏛️</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Género -->
+      <div class="mb-7">
+        <div class="uppercase text-[10px] tracking-[1.5px] text-charcoal mb-3 font-medium" data-god="segmented.genderTitle">Género objetivo</div>
+        <div class="flex flex-wrap gap-3">
+          <div onclick="toggleSeg(this, 'genero', 'hombre')" 
+               class="seg-pill px-6 py-2 text-sm font-medium rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active"
+               id="seg-genero-hombre">Hombre</div>
+          <div onclick="toggleSeg(this, 'genero', 'mujer')" 
+               class="seg-pill px-6 py-2 text-sm font-medium rounded-2xl border border-cream-100 hover:border-orange cursor-pointer active"
+               id="seg-genero-mujer">Mujer</div>
+        </div>
+      </div>
+
+      <!-- Edad -->
+      <div>
+        <div class="uppercase text-[10px] tracking-[1.5px] text-charcoal mb-3 font-medium" data-god="segmented.ageTitle">Rango de edad (puedes seleccionar varios)</div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <div onclick="toggleSeg(this, 'edades', 'nino')" class="seg-pill p-3 border border-cream-100 rounded-2xl cursor-pointer active text-center" id="seg-edades-nino">
+            <div class="font-semibold">Niño</div>
+            <div class="text-xs text-text-muted">&lt; 14 años</div>
+          </div>
+          <div onclick="toggleSeg(this, 'edades', 'joven')" class="seg-pill p-3 border border-cream-100 rounded-2xl cursor-pointer active text-center" id="seg-edades-joven">
+            <div class="font-semibold">Joven</div>
+            <div class="text-xs text-text-muted">15 — 30 años</div>
+          </div>
+          <div onclick="toggleSeg(this, 'edades', 'adulto')" class="seg-pill p-3 border border-cream-100 rounded-2xl cursor-pointer active text-center" id="seg-edades-adulto">
+            <div class="font-semibold">Adulto</div>
+            <div class="text-xs text-text-muted">30 — 50 años</div>
+          </div>
+          <div onclick="toggleSeg(this, 'edades', 'senior')" class="seg-pill p-3 border border-cream-100 rounded-2xl cursor-pointer active text-center" id="seg-edades-senior">
+            <div class="font-semibold">Senior</div>
+            <div class="text-xs text-text-muted">50 — 65 años</div>
+          </div>
+          <div onclick="toggleSeg(this, 'edades', 'vejez')" class="seg-pill p-3 border border-cream-100 rounded-2xl cursor-pointer active text-center" id="seg-edades-vejez">
+            <div class="font-semibold">Vejez</div>
+            <div class="text-xs text-text-muted">&gt; 65 años</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVENTORY / GEMELO -->
+  <section class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-orange text-xs tracking-[2px] font-semibold mb-1">GEMELO DIGITAL • OMNYPUBLICITY</div>
+        <div class="text-2xl font-semibold tracking-tight" data-god="segmented.inventoryTitle">Inventario coincidente</div>
+      </div>
+      <div id="match-count" class="text-sm px-4 py-1 bg-charcoal text-cream-50 rounded-full font-mono" data-god="segmented.matchCount">— circuitos</div>
+    </div>
+    <p class="text-text-muted mb-5 text-sm" data-god="segmented.inventorySubtitle">
+      Estos son los emplazamientos reales que coinciden con tu selección. El contenido que generes aquí se entiende directamente en el contexto del globo.
+    </p>
+
+    <div id="inventory-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- populated by JS -->
+    </div>
+
+    <div id="no-match" class="hidden mt-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-800" data-god="segmented.noMatch">
+      Ningún circuito coincide con la selección actual. Prueba ampliando género o rangos de edad.
+    </div>
+  </section>
+
+  <!-- SUGGESTED + PROMPT -->
+  <section class="max-w-6xl mx-auto px-6 pb-16">
+    <div class="grid lg:grid-cols-5 gap-6">
+      
+      <!-- Suggested ideas -->
+      <div class="lg:col-span-2 bg-white rounded-3xl border border-cream-100 p-7">
+        <div class="uppercase tracking-[1.5px] text-xs font-semibold text-orange mb-3" data-god="segmented.suggestedTitle">Ideas de contenido para esta audiencia</div>
+        <div id="suggested-list" class="space-y-3 text-sm">
+          <!-- JS populated -->
+        </div>
+        <div class="mt-4 text-[10px] text-text-muted" data-god="segmented.note">
+          Esta segmentación se guarda y se aplica automáticamente cuando entras en Crear con Grok.
+        </div>
+      </div>
+
+      <!-- Live prompt -->
+      <div class="lg:col-span-3 bg-white rounded-3xl border border-cream-100 p-7 flex flex-col">
+        <div class="flex items-center justify-between mb-2">
+          <div class="uppercase tracking-[1.5px] text-xs font-semibold text-charcoal" data-god="segmented.promptTitle">Prompt optimizado para Grok</div>
+          <button onclick="copyOptimizedPrompt()" 
+                  class="text-xs px-3 py-1 rounded-full border border-orange/40 hover:bg-orange/5 text-orange"
+                  data-god="segmented.ctaCopy">
+            Copiar prompt
+          </button>
+        </div>
+
+        <textarea id="optimized-prompt" class="flex-1 w-full font-mono text-sm p-4 rounded-2xl border border-cream-100 bg-cream-50 resize-y min-h-[128px]" spellcheck="false"></textarea>
+
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button onclick="goCreateWithSegments('video')" 
+                  class="flex-1 sm:flex-none px-6 py-3 rounded-2xl bg-orange text-white font-semibold text-sm hover:bg-orange-dark transition"
+                  data-god="segmented.ctaGenerate">
+            Crear vídeo para esta audiencia
+          </button>
+          <button onclick="goCreateWithSegments('image')" 
+                  class="flex-1 sm:flex-none px-6 py-3 rounded-2xl border border-charcoal text-charcoal font-semibold text-sm hover:bg-charcoal hover:text-white transition">
+            Crear imágenes
+          </button>
+          <button onclick="goCreateWithSegments()" 
+                  class="flex-1 sm:flex-none px-5 py-3 rounded-2xl text-sm border border-cream-200 hover:bg-cream-100">
+            Abrir Crear con Grok
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // === Segment state (same shape as the one inside /crear) ===
+    let segments = {
+      ubicacion: ['exterior', 'interior'],
+      genero: ['hombre', 'mujer'],
+      edades: ['nino', 'joven', 'adulto', 'senior', 'vejez']
+    };
+
+    // Representative inventory from Omnypublicity / gemelo digital
+    const INVENTORY = [
+      { id: 'xtanco-door', name: 'Puerta Xtanco', type: 'exterior', imp: '5.074 imp/min', desc: 'Entrada principal — máxima visibilidad peatonal', reaches: { genero: ['hombre','mujer'], edades: ['joven','adulto','senior','vejez'] } },
+      { id: 'xtanco-street', name: 'Pantalla Calle Xtanco', type: 'exterior', imp: '3.210 imp/min', desc: 'Fachada lateral, tráfico peatonal alto', reaches: { genero: ['hombre','mujer'], edades: ['joven','adulto','senior'] } },
+      { id: 'metahuman', name: 'Metahuman Lobby', type: 'interior', imp: '2.850 imp/min', desc: 'Pantalla interactiva principal del Xpacio', reaches: { genero: ['hombre','mujer'], edades: ['joven','adulto'] } },
+      { id: 'xpacio-central', name: 'Xpacio Central Hall', type: 'interior', imp: '4.120 imp/min', desc: 'Zona de paso principal interior', reaches: { genero: ['hombre','mujer'], edades: ['joven','adulto','senior'] } },
+      { id: 'xpacio-kids', name: 'Zona Infantil Xpacio', type: 'interior', imp: '980 imp/min', desc: 'Área familiar y niños', reaches: { genero: ['hombre','mujer'], edades: ['nino','joven'] } },
+      { id: 'plaza-sur', name: 'Plaza Sur Exterior', type: 'exterior', imp: '1.760 imp/min', desc: 'Terraza y acceso sur', reaches: { genero: ['hombre','mujer'], edades: ['adulto','senior'] } },
+      { id: 'premium-lounge', name: 'Premium Lounge Interior', type: 'interior', imp: '1.450 imp/min', desc: 'Zona VIP y eventos corporativos', reaches: { genero: ['hombre','mujer'], edades: ['adulto','senior','vejez'] } },
+      { id: 'food-court-ext', name: 'Food Court Terraza', type: 'exterior', imp: '2.390 imp/min', desc: 'Zona de restauración al aire libre', reaches: { genero: ['hombre','mujer'], edades: ['joven','adulto','senior'] } }
+    ];
+
+    function toggleSeg(el, category, value) {
+      if (!segments[category]) segments[category] = [];
+      const idx = segments[category].indexOf(value);
+      if (idx > -1) {
+        segments[category].splice(idx, 1);
+        el.classList.remove('active');
+      } else {
+        segments[category].push(value);
+        el.classList.add('active');
+      }
+      updateAll();
+    }
+
+    function resetAllSegments() {
+      segments = {
+        ubicacion: ['exterior', 'interior'],
+        genero: ['hombre', 'mujer'],
+        edades: ['nino', 'joven', 'adulto', 'senior', 'vejez']
+      };
+      // re-activate all pills/cards
+      document.querySelectorAll('.seg-card, .seg-pill').forEach(el => el.classList.add('active'));
+      updateAll();
+    }
+
+    function updateActiveUI() {
+      // Ubicacion
+      document.querySelectorAll('[id^="seg-ubicacion-"]').forEach(el => {
+        const val = el.id.split('-').pop();
+        if (segments.ubicacion.includes(val)) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+      // Genero
+      document.querySelectorAll('[id^="seg-genero-"]').forEach(el => {
+        const val = el.id.split('-').pop();
+        if (segments.genero.includes(val)) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+      // Edades
+      document.querySelectorAll('[id^="seg-edades-"]').forEach(el => {
+        const val = el.id.split('-').pop();
+        if (segments.edades.includes(val)) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+    }
+
+    function matchesInventory(item) {
+      const u = segments.ubicacion || [];
+      const g = segments.genero || [];
+      const e = segments.edades || [];
+
+      const typeOk = u.length === 0 || u.includes(item.type);
+      if (!typeOk) return false;
+
+      const genderOk = g.length === 0 || item.reaches.genero.some(x => g.includes(x));
+      if (!genderOk) return false;
+
+      const ageOk = e.length === 0 || item.reaches.edades.some(x => e.includes(x));
+      return ageOk;
+    }
+
+    function renderInventory() {
+      const grid = document.getElementById('inventory-grid');
+      const no = document.getElementById('no-match');
+      const countEl = document.getElementById('match-count');
+
+      const filtered = INVENTORY.filter(matchesInventory);
+
+      if (countEl) countEl.textContent = `${filtered.length} ${filtered.length === 1 ? 'circuito' : 'circuitos'}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        no.classList.remove('hidden');
+        return;
+      }
+      no.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="group bg-white border border-cream-100 rounded-2xl p-5 hover:border-orange/60 transition flex flex-col">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="font-semibold tracking-tight">${item.name}</div>
+              <div class="text-xs uppercase tracking-widest mt-0.5 ${item.type === 'exterior' ? 'text-orange' : 'text-teal'}">${item.type.toUpperCase()}</div>
+            </div>
+            <div class="text-right text-xs font-mono text-text-muted">${item.imp}</div>
+          </div>
+          <div class="mt-3 text-sm text-text-muted flex-1">${item.desc}</div>
+          <div class="mt-4 pt-3 border-t border-cream-100 text-[10px] text-charcoal/60 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full ${item.type === 'exterior' ? 'bg-orange' : 'bg-teal'}"></span>
+            <span>Activo en gemelo digital</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getAgeLabel(code) {
+      return { nino: 'niños <14', joven: 'jóvenes 15-30', adulto: 'adultos 30-50', senior: 'seniors 50-65', vejez: 'vejez >65' }[code] || code;
+    }
+
+    function buildSegmentText() {
+      const parts = [];
+      if (segments.ubicacion && segments.ubicacion.length) {
+        parts.push(`publicidad ${segments.ubicacion.join(' o ')}`);
+      }
+      if (segments.genero && segments.genero.length) {
+        parts.push(`dirigido a ${segments.genero.join(' y ')}`);
+      }
+      if (segments.edades && segments.edades.length) {
+        parts.push(`para ${segments.edades.map(getAgeLabel).join(', ')}`);
+      }
+      if (parts.length === 0) return '';
+      return `Contenido segmentado para ${parts.join(', ')} en cartelería digital premium. Ajustar tono, lenguaje, imágenes y estilo específicamente para ese público objetivo y los circuitos de Omnypublicity.`;
+    }
+
+    function updatePromptBox() {
+      const ta = document.getElementById('optimized-prompt');
+      if (!ta) return;
+      ta.value = buildSegmentText() || 'Selecciona al menos un filtro para generar el prompt optimizado.';
+    }
+
+    function updateSuggested() {
+      const container = document.getElementById('suggested-list');
+      if (!container) return;
+
+      const u = segments.ubicacion || [];
+      const g = segments.genero || [];
+      const e = segments.edades || [];
+
+      const ideas = [];
+
+      const loc = u.length ? u.join(' / ') : 'cualquier ubicación';
+      const gen = g.length ? g.join(' + ') : 'cualquier género';
+      const ages = e.length ? e.map(getAgeLabel).join(' · ') : 'todas las edades';
+
+      ideas.push(`Mensaje de bienvenida cálido y elegante para ${loc}, tono cercano dirigido a ${gen} (${ages}).`);
+      ideas.push(`Historia corta de 20s que conecta con el día a día de ${gen} en ${loc}, iluminación suave y ritmo pausado.`);
+      ideas.push(`Pieza motivacional o informativa pensada para ${ages} que visitan ${loc}, con tipografía clara y colorimetría premium.`);
+      if (e.includes('nino') || e.includes('joven')) {
+        ideas.push(`Contenido ligero y visual para público joven/familiar en zonas de alto tráfico interior o exterior.`);
+      }
+
+      container.innerHTML = ideas.slice(0, 4).map(txt => `
+        <div class="p-3 bg-cream-50 rounded-xl text-charcoal/90 border border-cream-100 text-sm">${txt}</div>
+      `).join('');
+    }
+
+    function updateAll() {
+      updateActiveUI();
+      renderInventory();
+      updatePromptBox();
+      updateSuggested();
+
+      // Persist for bridge to /crear
+      try {
+        localStorage.setItem('pixer_last_segments', JSON.stringify(segments));
+      } catch (e) {}
+    }
+
+    function copyOptimizedPrompt() {
+      const ta = document.getElementById('optimized-prompt');
+      if (!ta) return;
+      const text = ta.value.trim();
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = ta.style.borderColor;
+        ta.style.borderColor = '#E07A3D';
+        setTimeout(() => { ta.style.borderColor = orig || ''; }, 900);
+      });
+    }
+
+    function goCreateWithSegments(kind) {
+      try {
+        localStorage.setItem('pixer_last_segments', JSON.stringify(segments));
+        localStorage.setItem('pixer_open_kind', kind || '');
+      } catch (e) {}
+      window.location.href = '/crear/';
+    }
+
+    // Boot
+    function initSegmentPage() {
+      // Restore previous selection if present
+      try {
+        const saved = localStorage.getItem('pixer_last_segments');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') {
+            segments = { ...segments, ...parsed };
+          }
+        }
+      } catch (e) {}
+
+      // Ensure all start active in DOM (HTML already has "active"), then sync UI + data
+      updateAll();
+
+      // If user had zeroed some, reflect it
+      updateActiveUI();
+    }
+
+    // Make sure initial active classes are correct after possible restore
+    window.addEventListener('DOMContentLoaded', () => {
+      initSegmentPage();
+    });
+
+    // Expose for debugging / future
+    window.PIXER_SEGMENTS = segments;
+  </script>
+
+  <style>
+    .seg-card.active, .seg-pill.active {
+      border-color: #E07A3D;
+      background-color: rgba(224, 122, 61, 0.06);
+      box-shadow: 0 0 0 1px rgba(224, 122, 61, 0.15);
+    }
+    .seg-card:not(.active), .seg-pill:not(.active) {
+      opacity: 0.75;
+    }
+    .seg-card, .seg-pill {
+      transition: all 0.1s ease;
+      user-select: none;
+    }
+  </style>
+</MainLayout>
