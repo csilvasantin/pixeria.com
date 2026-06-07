@@ -350,9 +350,12 @@ import MainLayout from '../layouts/MainLayout.astro';
         $('#pointSel').disabled=!options.length;
         return $('#pointSel').value;
       }
+      async function loadCachedLocations(){
+        try{var r=await fetch('/calendario/locations-cache.json',{cache:'no-store'});if(!r.ok)return [];var data=await r.json();return Array.isArray(data)?data:(data&&data.locations)||[];}catch(e){return [];}
+      }
       async function loadStores(){
-        var list=[];
-        try{ if(window.loadOmnipLocationsAsync){ var r=await window.loadOmnipLocationsAsync(); list=Array.isArray(r)?r:(r&&r.locations)||[]; } }catch(e){}
+        var list=await loadCachedLocations();
+        try{ if(!list.length&&window.loadOmnipLocationsAsync){ var r=await window.loadOmnipLocationsAsync(); list=Array.isArray(r)?r:(r&&r.locations)||[]; } }catch(e){}
         if(!list.length&&window.loadOmnipLocations){ try{ list=window.loadOmnipLocations(); }catch(e){} }
         if(!list.length)list=window.OMNIP_LOCATIONS_DEFAULT||[];
         state.allStores=list.filter(function(s){return Array.isArray(s.surfaces)&&s.surfaces.some(isScreen);});
