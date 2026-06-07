@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: site/package-lock.json
       - name: Setup Pages
@@ -31,8 +31,6 @@ jobs:
       - name: Install dependencies
         run: cd site && npm ci
       - name: Build with Astro
-        env:
-          GITHUB_PAGES: true
         run: cd site && npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

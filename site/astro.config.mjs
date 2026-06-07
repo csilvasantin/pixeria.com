@@ -4,11 +4,11 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
-const isGitHubPages = !!process.env.GITHUB_PAGES;
-
+// Served from the custom apex domain pixeria.com, so the site lives at the
+// root path in every environment — no repo-name base prefix.
 export default defineConfig({
-  site: 'https://pixeria.com',
-  base: isGitHubPages ? '/pixeria.com' : '/',
+  site: 'https://docs.pixeria.com',
+  base: '/',
   vite: {
     plugins: [tailwindcss()]
   }
