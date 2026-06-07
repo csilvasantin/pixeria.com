@@ -14,6 +14,7 @@ const {
 } = Astro.props;
 
 const isSpanish = lang === 'es';
+const path = Astro.url.pathname;
 ---
 
 <!DOCTYPE html>
@@ -32,9 +33,9 @@ const isSpanish = lang === 'es';
   <body class="bg-cream-50 text-charcoal antialiased">
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-cream-50/95 backdrop-blur-md border-b border-cream-100">
-      <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-2">
+        <a href="/" class="flex items-center gap-2 shrink-0">
           <div class="w-8 h-8 rounded-full bg-orange flex items-center justify-center">
             <span class="text-cream-50 font-semibold text-lg tracking-tighter">P</span>
           </div>
@@ -42,57 +43,67 @@ const isSpanish = lang === 'es';
         </a>
 
         <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center gap-8 text-sm">
-          <a href="#producto" class="hover:text-orange transition-colors" data-god="nav.product">
-            {isSpanish ? 'El Producto' : 'The Product'}
+        <div class="hidden lg:flex items-center gap-7 text-sm">
+          <a href="/#como-funciona" class="hover:text-orange transition-colors">
+            {isSpanish ? 'Método' : 'Method'}
           </a>
-          <a href="#como-funciona" class="hover:text-orange transition-colors" data-god="nav.how">
-            {isSpanish ? 'Cómo funciona' : 'How it works'}
+          <a href="/crear/" class={`hover:text-orange transition-colors font-medium ${path.startsWith('/crear/') ? 'text-orange' : ''}`}>
+            {isSpanish ? 'Crear' : 'Create'}
           </a>
-          <a href="/crear/" class="hover:text-orange transition-colors font-medium" data-god="nav.crear">
-            {isSpanish ? 'Crear con Grok' : 'Create with Grok'}
-          </a>
-          <a href="/crear-campana/" class="hover:text-orange transition-colors font-medium" data-god="nav.campaign">
-            {isSpanish ? 'Crear campaña' : 'Create Campaign'}
-          </a>
-          <a href="/segmentados/" class="hover:text-orange transition-colors font-medium" data-god="nav.segmented">
-            {isSpanish ? 'Contenidos segmentados' : 'Segmented Content'}
-          </a>
-          <a href="/calendario/" class="hover:text-orange transition-colors font-medium" data-god="nav.calendar">
-            {isSpanish ? 'Calendario' : 'Schedule'}
-          </a>
-          <a href="#ejemplos" class="hover:text-orange transition-colors" data-god="nav.examples">
-            {isSpanish ? 'Ejemplos' : 'Examples'}
-          </a>
-          <a href="#estilo" class="hover:text-orange transition-colors font-medium" data-god="nav.style">
-            {isSpanish ? 'Nuestro estilo' : 'Our Style'}
+          <a href="/crear-campana/" class={`hover:text-orange transition-colors font-medium ${path.startsWith('/crear-campana') || path.startsWith('/calendario') ? 'text-orange' : ''}`}>
+            {isSpanish ? 'Campañas' : 'Campaigns'}
           </a>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3 shrink-0">
           <!-- Language Switcher -->
-          <div class="flex items-center rounded-full bg-surface p-1 text-sm">
+          <div class="flex items-center rounded-full bg-surface p-1 text-xs font-semibold" aria-label="Seleccion de idioma">
             <a 
               href="/" 
               class={`px-3 py-1 rounded-full transition-all ${lang === 'es' ? 'bg-orange text-cream-50' : 'hover:bg-cream-100'}`}
             >
-              ES
+              ESP
             </a>
             <a 
-              href="/en" 
+              href="/en/"
               class={`px-3 py-1 rounded-full transition-all ${lang === 'en' ? 'bg-orange text-cream-50' : 'hover:bg-cream-100'}`}
             >
-              EN
+              ENG
             </a>
           </div>
 
           <!-- CTA -->
           <a 
-            href="#acceso" 
-            class="px-5 py-2 rounded-full bg-orange text-cream-50 text-sm font-medium hover:bg-orange-dark transition-colors"
-            data-god="nav.access"
+            href="mailto:csilvasantin@gmail.com?subject=Pixeria"
+            class="hidden sm:inline-flex px-5 py-2 rounded-full bg-orange text-cream-50 text-sm font-medium hover:bg-orange-dark transition-colors"
           >
-            {isSpanish ? 'Acceder' : 'Get Access'}
+            {isSpanish ? 'Contacto' : 'Contact'}
+          </a>
+          <button
+            id="pixeriaMenuToggle"
+            class="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream-100 bg-white text-charcoal"
+            type="button"
+            aria-label={isSpanish ? 'Abrir menu' : 'Open menu'}
+            aria-expanded="false"
+          >
+            <span class="sr-only">{isSpanish ? 'Abrir menu' : 'Open menu'}</span>
+            <span class="block h-3.5 w-4 border-y-2 border-current"></span>
+          </button>
+        </div>
+      </div>
+      <div id="pixeriaMobileMenu" class="hidden lg:hidden border-t border-cream-100 bg-cream-50 px-6 py-4 shadow-lg">
+        <div class="mx-auto flex max-w-7xl flex-col gap-2 text-sm font-medium">
+          <a href="/#como-funciona" class="rounded-lg px-3 py-3 hover:bg-cream-100">
+            {isSpanish ? 'Método' : 'Method'}
+          </a>
+          <a href="/crear/" class={`rounded-lg px-3 py-3 hover:bg-cream-100 ${path.startsWith('/crear/') ? 'text-orange' : ''}`}>
+            {isSpanish ? 'Crear' : 'Create'}
+          </a>
+          <a href="/crear-campana/" class={`rounded-lg px-3 py-3 hover:bg-cream-100 ${path.startsWith('/crear-campana') || path.startsWith('/calendario') ? 'text-orange' : ''}`}>
+            {isSpanish ? 'Campañas' : 'Campaigns'}
+          </a>
+          <a href="mailto:csilvasantin@gmail.com?subject=Pixeria" class="mt-2 rounded-lg bg-orange px-3 py-3 text-center text-cream-50">
+            {isSpanish ? 'Contacto' : 'Contact'}
           </a>
         </div>
       </div>
@@ -120,6 +131,26 @@ const isSpanish = lang === 'es';
 
     <!-- GOD MODE — Live text overrides from /god (secure, only affects public pages) -->
     <script>
+      (function() {
+        const toggle = document.getElementById('pixeriaMenuToggle');
+        const menu = document.getElementById('pixeriaMobileMenu');
+        if (!toggle || !menu) return;
+        function setOpen(open) {
+          menu.classList.toggle('hidden', !open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        toggle.addEventListener('click', () => setOpen(menu.classList.contains('hidden')));
+        menu.addEventListener('click', (event) => {
+          if (event.target instanceof HTMLAnchorElement) setOpen(false);
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setOpen(false);
+        });
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 1024) setOpen(false);
+        });
+      })();
+
       (function() {
         // Don't run on the God editor itself
         if (location.pathname.startsWith('/god')) return;

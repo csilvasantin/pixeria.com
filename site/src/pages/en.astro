@@ -1,0 +1,54 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="PixerIA"
+  description="AI content for digital signage, campaigns and real-world screens."
+  lang="en"
+>
+  <section class="relative min-h-[88dvh] flex items-center justify-center pt-16 overflow-hidden">
+    <div class="absolute inset-0 bg-[#0D3B66]">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-cream-50/90"></div>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto px-6 text-center pt-12">
+      <div class="inline-block mb-4 px-4 py-1 rounded-full bg-white/90 text-charcoal text-sm font-medium">
+        AI CONTENT + DIGITAL SIGNAGE
+      </div>
+      <h1 class="text-6xl md:text-7xl leading-[0.95] text-white font-semibold mb-6">
+        Content for screens<br>
+        with a human eye.
+      </h1>
+      <p class="max-w-2xl mx-auto text-xl md:text-2xl text-white/90 mb-10">
+        PixerIA helps create, preview and buy campaign content for real-world screens through Admira and XpaceOS.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/crear/" class="px-8 py-4 rounded-full bg-orange text-white text-lg font-medium hover:bg-orange-dark">
+          Create
+        </a>
+        <a href="/crear-campana/" class="px-8 py-4 rounded-full bg-white/95 text-charcoal text-lg font-medium hover:bg-white">
+          Campaigns
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona" class="max-w-6xl mx-auto px-6 py-20">
+    <p class="text-orange font-medium mb-4">Method</p>
+    <h2 class="text-4xl md:text-5xl text-charcoal mb-10">
+      One workflow from idea to screen.
+    </h2>
+    <div class="grid md:grid-cols-4 gap-5">
+      {['Diagnose', 'Design', 'Produce', 'Publish'].map((step, index) => (
+        <article class="bg-white border border-cream-100 rounded-2xl p-6">
+          <div class="text-orange font-semibold mb-4">0{index + 1}</div>
+          <h3 class="text-xl font-semibold mb-3">{step}</h3>
+          <p class="text-charcoal/70">
+            Keep the creative, operational and screen context connected before launching the campaign.
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+</MainLayout>
