@@ -375,6 +375,8 @@ import MainLayout from '../layouts/MainLayout.astro';
 const WORKER = 'https://pixer-eleven.csilvasantin.workers.dev';
 
 let currentResult = { url: null, type: null };
+let lastGenerationParams = null;
+let recentCreations = [];
 
 // Visual model cards data
 const MODEL_OPTIONS = {
@@ -755,7 +757,7 @@ async function generateVideo() {
 
   const duration = document.getElementById('video-duration')?.value || 8;
   const aspect = document.getElementById('video-aspect')?.value || '16:9';
-  const resolution = document.getElementById('video-res')?.value || '720p';
+  const resolution = document.getElementById('video-resolution')?.value || document.getElementById('video-res')?.value || '720p';
 
   lastGenerationParams = { type: 'video', prompt, model, params: { duration, aspect, resolution } };
 
@@ -842,6 +844,8 @@ async function generateImage() {
   if (!raw) return alert('Prompt requerido');
   const prompt = getEffectivePrompt(raw, 'image');
   const model = getSelectedModel('image');
+  const aspect = document.getElementById('image-aspect')?.value || document.getElementById('img-aspect')?.value || '1:1';
+  const count = Number(document.getElementById('image-count')?.value || document.getElementById('img-count')?.value || 1);
 
   const status = document.getElementById('status-panel');
   const gen = document.getElementById('generating-state');
@@ -850,6 +854,7 @@ async function generateImage() {
 
   // Show loading mosaic for images
   showImageGeneratingPreview(count);
+  lastGenerationParams = { type: 'image', prompt, model, params: { aspect, count } };
 
   try {
     let endpoint = '/xai/image';
@@ -880,9 +885,7 @@ async function generateImage() {
 
     hideImageGeneratingPreview();
     gen.classList.add('hidden'); res.classList.remove('hidden');
-    document.getElementById('result-title').textContent = 'Imágenes listas';
-    document.getElementById('result-content').innerHTML = urls.map(u => `<img src="${u}" class="rounded-2xl mb-2 w-full">`).join('');
-    window.currentResult = { url: urls[0], type: 'image' };
+    showResult('image', urls[0], prompt, model, { aspect, count, urls });
   } catch(e){ 
     hideImageGeneratingPreview();
     alert(e.message); 
@@ -895,6 +898,7 @@ async function generateAudio() {
   if (!raw) return alert('Texto requerido');
   const text = getEffectivePrompt(raw, 'audio');
   const model = getSelectedModel('audio');
+  lastGenerationParams = { type: 'audio', prompt: text, model, params: {} };
 
   const status = document.getElementById('status-panel');
   status.classList.remove('hidden');
@@ -908,9 +912,7 @@ async function generateAudio() {
 
     document.getElementById('generating-state').classList.add('hidden');
     document.getElementById('result-state').classList.remove('hidden');
-    document.getElementById('result-title').textContent = 'Audio listo';
-    document.getElementById('result-content').innerHTML = `<audio controls class="w-full" src="${url}"></audio>`;
-    window.currentResult = { url, type: 'audio' };
+    showResult('audio', url, text, model, {});
   } catch(e) { alert('Error audio: ' + e.message); }
 }
 
@@ -919,6 +921,7 @@ async function generateMusic() {
   if (!raw) return alert('Prompt requerido');
   const prompt = getEffectivePrompt(raw, 'music');
   const lyrics = document.getElementById('music-lyrics')?.value || '';
+  lastGenerationParams = { type: 'music', prompt, model: getSelectedModel('music'), params: { lyrics } };
 
   const status = document.getElementById('status-panel');
   status.classList.remove('hidden');
@@ -933,11 +936,10 @@ async function generateMusic() {
     const data = await r.json();
     const audioB64 = data.audio;
 
+    const url = `data:audio/wav;base64,${audioB64}`;
     document.getElementById('generating-state').classList.add('hidden');
     document.getElementById('result-state').classList.remove('hidden');
-    document.getElementById('result-title').textContent = 'Música lista';
-    document.getElementById('result-content').innerHTML = `<audio controls class="w-full" src="data:audio/wav;base64,${audioB64}"></audio>`;
-    window.currentResult = { url: `data:audio/wav;base64,${audioB64}`, type: 'music' };
+    showResult('music', url, prompt, getSelectedModel('music'), { lyrics });
   } catch(e) { alert('Error música: ' + e.message); }
 }
 
@@ -964,6 +966,193 @@ function downloadResult() {
   a.click();
 }
 
+function escHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
+
+function resultLabel(type) {
+  return { video: 'Vídeo listo', image: 'Imágenes listas', audio: 'Audio listo', music: 'Música lista' }[type] || 'Contenido listo';
+}
+
+function assetKind(type) {
+  return type === 'image' ? 'image' : type === 'video' ? 'video' : 'audio';
+}
+
+function setCurrentResult(result) {
+  currentResult = result;
+  window.currentResult = result;
+}
+
+function showResult(type, url, prompt, model, params = {}) {
+  const gen = document.getElementById('generating-state');
+  const res = document.getElementById('result-state');
+  const title = document.getElementById('result-title');
+  const modelEl = document.getElementById('result-model');
+  const meta = document.getElementById('result-meta');
+  const content = document.getElementById('result-content');
+  const safePrompt = prompt || lastGenerationParams?.prompt || '';
+
+  setCurrentResult({
+    url,
+    type,
+    kind: assetKind(type),
+    prompt: safePrompt,
+    model,
+    params,
+    target: JSON.parse(JSON.stringify(segments)),
+    createdAt: new Date().toISOString(),
+  });
+
+  if (title) title.textContent = resultLabel(type);
+  if (modelEl) modelEl.textContent = String(model || 'grok').toUpperCase();
+  if (meta) {
+    const target = buildTargetSummary();
+    meta.innerHTML = `<div>${escHtml(type)} · ${escHtml(model || 'grok')}</div><div>${escHtml(target)}</div>`;
+  }
+  if (content) {
+    if (type === 'video') {
+      content.innerHTML = `
+        <video controls playsinline class="w-full rounded-2xl bg-black" src="${escHtml(url)}"></video>
+        <p class="mt-4 text-sm text-text-muted">${escHtml(safePrompt)}</p>
+      `;
+    } else if (type === 'image') {
+      const urls = Array.isArray(params.urls) && params.urls.length ? params.urls : [url];
+      content.innerHTML = `
+        <div class="grid sm:grid-cols-2 gap-3">
+          ${urls.map((item) => `<img src="${escHtml(item)}" class="rounded-2xl w-full bg-surface" alt="Resultado generado">`).join('')}
+        </div>
+        <p class="mt-4 text-sm text-text-muted">${escHtml(safePrompt)}</p>
+      `;
+    } else {
+      content.innerHTML = `
+        <audio controls class="w-full" src="${escHtml(url)}"></audio>
+        <p class="mt-4 text-sm text-text-muted">${escHtml(safePrompt)}</p>
+      `;
+    }
+  }
+  if (gen) gen.classList.add('hidden');
+  if (res) res.classList.remove('hidden');
+  addRecent(currentResult);
+  document.getElementById('status-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function buildTargetSummary() {
+  const ages = { nino: 'niño', joven: 'joven', adulto: 'adulto', senior: 'senior', vejez: 'vejez' };
+  const location = (segments.ubicacion || []).join(' + ') || 'sin ubicacion';
+  const gender = (segments.genero || []).join(' + ') || 'sin genero';
+  const age = (segments.edades || []).map((item) => ages[item] || item).join(' + ') || 'sin edad';
+  return `${location} · ${gender} · ${age}`;
+}
+
+function campaignNameFromPrompt(prompt) {
+  const base = String(prompt || 'Campaña PixerIA')
+    .replace(/\s+/g, ' ')
+    .replace(/^Contenido segmentado.*?\n\n/i, '')
+    .trim();
+  return base.length > 54 ? base.slice(0, 51).trim() + '...' : base;
+}
+
+function buildAdmiraCampaignUrl() {
+  if (!currentResult?.url) return null;
+  if (/^(blob:|data:)/.test(currentResult.url)) {
+    alert('Este resultado es local. Para comprarlo en Admira necesitas una URL pública de imagen o vídeo.');
+    return null;
+  }
+  const draft = {
+    id: `PX-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+    source: 'pixeria',
+    brand: 'PixerIA',
+    campaign: campaignNameFromPrompt(currentResult.prompt),
+    assetUrl: currentResult.url,
+    assetType: currentResult.kind || assetKind(currentResult.type),
+    model: currentResult.model,
+    prompt: currentResult.prompt,
+    target: currentResult.target || segments,
+    createdAt: currentResult.createdAt || new Date().toISOString(),
+  };
+  try {
+    localStorage.setItem('pixer_campaign_draft', JSON.stringify(draft));
+  } catch (e) {}
+
+  const url = new URL('https://admira.app/');
+  url.searchParams.set('draft', 'pixeria');
+  url.searchParams.set('campaignId', draft.id);
+  url.searchParams.set('brand', draft.brand);
+  url.searchParams.set('campaign', draft.campaign);
+  url.searchParams.set('assetUrl', draft.assetUrl);
+  url.searchParams.set('assetType', draft.assetType);
+  url.searchParams.set('target', JSON.stringify(draft.target));
+  url.searchParams.set('prompt', draft.prompt.slice(0, 360));
+  return url;
+}
+
+function useInSignage() {
+  const url = buildAdmiraCampaignUrl();
+  if (!url) return;
+  window.open(url.toString(), '_blank', 'noopener');
+}
+
+function regenerateWithSame() {
+  if (!lastGenerationParams) return;
+  const map = { video: 'video-prompt', image: 'image-prompt', audio: 'audio-prompt', music: 'music-prompt' };
+  const input = document.getElementById(map[lastGenerationParams.type]);
+  if (input) input.value = lastGenerationParams.prompt || '';
+  ({ video: generateVideo, image: generateImage, audio: generateAudio, music: generateMusic }[lastGenerationParams.type] || generateVideo)();
+}
+
+function editPromptFromResult() {
+  if (!currentResult?.prompt) return;
+  const map = { video: 'video-prompt', image: 'image-prompt', audio: 'audio-prompt', music: 'music-prompt' };
+  const input = document.getElementById(map[currentResult.type] || 'video-prompt');
+  if (!input) return;
+  input.value = currentResult.prompt;
+  input.focus();
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function addRecent(item) {
+  if (!item?.url) return;
+  recentCreations = [item, ...recentCreations.filter((old) => old.url !== item.url)].slice(0, 8);
+  renderRecent();
+}
+
+function renderRecent() {
+  const wrap = document.getElementById('recent-creations');
+  const list = document.getElementById('recent-list');
+  if (!wrap || !list) return;
+  if (!recentCreations.length) {
+    wrap.classList.add('hidden');
+    list.innerHTML = '';
+    return;
+  }
+  wrap.classList.remove('hidden');
+  list.innerHTML = recentCreations.map((item) => `
+    <button type="button" class="text-left bg-white border border-cream-100 rounded-2xl overflow-hidden hover:border-orange" data-recent-url="${escHtml(item.url)}">
+      <span class="block aspect-video bg-surface overflow-hidden">
+        ${item.type === 'image' ? `<img src="${escHtml(item.url)}" class="w-full h-full object-cover" alt="">` : `<span class="flex h-full items-center justify-center text-text-muted">${escHtml(item.type)}</span>`}
+      </span>
+      <span class="block p-2 truncate">${escHtml(campaignNameFromPrompt(item.prompt))}</span>
+    </button>
+  `).join('');
+  list.querySelectorAll('[data-recent-url]').forEach((button) => {
+    button.onclick = () => {
+      const found = recentCreations.find((item) => item.url === button.dataset.recentUrl);
+      if (found) showResult(found.type, found.url, found.prompt, found.model, found.params);
+    };
+  });
+}
+
+function clearRecent() {
+  recentCreations = [];
+  renderRecent();
+}
+
 function resetAll() {
   document.getElementById('status-panel').classList.add('hidden');
 }
@@ -979,10 +1168,27 @@ function initCrear() {
   console.log('%c[Crear] Página lista con 4 secciones visuales + parámetros dinámicos.', 'color:#888');
 }
 
+Object.assign(window, {
+  toggleSegment,
+  resetSegments,
+  generateVideo,
+  generateImage,
+  generateAudio,
+  generateMusic,
+  generateMusicLyrics,
+  cancelCurrentGeneration,
+  downloadResult,
+  useInSignage,
+  regenerateWithSame,
+  editPromptFromResult,
+  resetAll,
+  clearRecent,
+});
+
 document.addEventListener('DOMContentLoaded', initCrear);
 </script>
 
-<script>
+<script type="text/plain" id="legacy-crear-script-disabled">
 const WORKER = 'https://pixer-eleven.csilvasantin.workers.dev';
 
 let currentRequestId = null;

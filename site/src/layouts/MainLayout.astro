@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css';
+
 interface Props {
   title?: string;
   description?: string;
@@ -52,6 +54,9 @@ const isSpanish = lang === 'es';
           </a>
           <a href="/segmentados/" class="hover:text-orange transition-colors font-medium" data-god="nav.segmented">
             {isSpanish ? 'Contenidos segmentados' : 'Segmented Content'}
+          </a>
+          <a href="/calendario/" class="hover:text-orange transition-colors font-medium" data-god="nav.calendar">
+            {isSpanish ? 'Calendario' : 'Schedule'}
           </a>
           <a href="#ejemplos" class="hover:text-orange transition-colors" data-god="nav.examples">
             {isSpanish ? 'Ejemplos' : 'Examples'}
