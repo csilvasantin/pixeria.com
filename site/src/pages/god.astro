@@ -680,10 +680,8 @@ async function pushToWorker() {
   }
   const btns = document.querySelectorAll('button');
   btns.forEach(b => b.disabled = true);
-  
-  const { saveGodContent } = await import('../lib/texts.ts'); // works because Astro serves it
-  
-  // We inline the save because the import path in a static page is easier to do directly
+
+  // Save inline: POST the full text tree straight to the God worker (R2-backed).
   const res = await fetch('https://pixer-eleven.csilvasantin.workers.dev/god/save', {
     method: 'POST',
     headers: { 
