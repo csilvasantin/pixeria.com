@@ -15,6 +15,11 @@ const {
 
 const isSpanish = lang === 'es';
 const path = Astro.url.pathname;
+const campaignHref = isSpanish ? '/crear-campana/' : '/en/crear-campana/';
+const methodHref = isSpanish ? '/#como-funciona' : '/en/#como-funciona';
+const spanishHref = path.startsWith('/en/crear-campana') ? '/crear-campana/' : '/';
+const englishHref = path.startsWith('/crear-campana') ? '/en/crear-campana/' : '/en/';
+const campaignIsActive = path.startsWith('/crear-campana') || path.startsWith('/en/crear-campana') || path.startsWith('/calendario');
 ---
 
 <!DOCTYPE html>
@@ -44,13 +49,13 @@ const path = Astro.url.pathname;
 
         <!-- Desktop Navigation -->
         <div class="hidden lg:flex items-center gap-7 text-sm">
-          <a href="/#como-funciona" class="hover:text-orange transition-colors">
+          <a href={methodHref} class="hover:text-orange transition-colors">
             {isSpanish ? 'Método' : 'Method'}
           </a>
           <a href="/crear/" class={`hover:text-orange transition-colors font-medium ${path.startsWith('/crear/') ? 'text-orange' : ''}`}>
             {isSpanish ? 'Crear' : 'Create'}
           </a>
-          <a href="/crear-campana/" class={`hover:text-orange transition-colors font-medium ${path.startsWith('/crear-campana') || path.startsWith('/calendario') ? 'text-orange' : ''}`}>
+          <a href={campaignHref} class={`hover:text-orange transition-colors font-medium ${campaignIsActive ? 'text-orange' : ''}`}>
             {isSpanish ? 'Campañas' : 'Campaigns'}
           </a>
         </div>
@@ -59,13 +64,13 @@ const path = Astro.url.pathname;
           <!-- Language Switcher -->
           <div class="flex items-center rounded-full bg-surface p-1 text-xs font-semibold" aria-label="Seleccion de idioma">
             <a 
-              href="/" 
+              href={spanishHref}
               class={`px-3 py-1 rounded-full transition-all ${lang === 'es' ? 'bg-orange text-cream-50' : 'hover:bg-cream-100'}`}
             >
               ESP
             </a>
             <a 
-              href="/en/"
+              href={englishHref}
               class={`px-3 py-1 rounded-full transition-all ${lang === 'en' ? 'bg-orange text-cream-50' : 'hover:bg-cream-100'}`}
             >
               ENG
@@ -93,13 +98,13 @@ const path = Astro.url.pathname;
       </div>
       <div id="pixeriaMobileMenu" class="hidden lg:hidden border-t border-cream-100 bg-cream-50 px-6 py-4 shadow-lg">
         <div class="mx-auto flex max-w-7xl flex-col gap-2 text-sm font-medium">
-          <a href="/#como-funciona" class="rounded-lg px-3 py-3 hover:bg-cream-100">
+          <a href={methodHref} class="rounded-lg px-3 py-3 hover:bg-cream-100">
             {isSpanish ? 'Método' : 'Method'}
           </a>
           <a href="/crear/" class={`rounded-lg px-3 py-3 hover:bg-cream-100 ${path.startsWith('/crear/') ? 'text-orange' : ''}`}>
             {isSpanish ? 'Crear' : 'Create'}
           </a>
-          <a href="/crear-campana/" class={`rounded-lg px-3 py-3 hover:bg-cream-100 ${path.startsWith('/crear-campana') || path.startsWith('/calendario') ? 'text-orange' : ''}`}>
+          <a href={campaignHref} class={`rounded-lg px-3 py-3 hover:bg-cream-100 ${campaignIsActive ? 'text-orange' : ''}`}>
             {isSpanish ? 'Campañas' : 'Campaigns'}
           </a>
           <a href="mailto:csilvasantin@gmail.com?subject=Pixeria" class="mt-2 rounded-lg bg-orange px-3 py-3 text-center text-cream-50">
