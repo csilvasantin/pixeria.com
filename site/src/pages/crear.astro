@@ -11,15 +11,15 @@ import MainLayout from '../layouts/MainLayout.astro';
   <section class="pt-20 pb-12 bg-[#0D3B66] text-white">
     <div class="max-w-4xl mx-auto px-6 text-center">
       <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/10 text-sm tracking-[1.5px] mb-4">
-        EXCLUSIVO CON GROK
+        NANO BANANA + GROK
       </div>
       
       <h1 class="text-6xl md:text-7xl font-semibold tracking-[-3px] mb-4" data-god="crear.title">
-        Crear Videos con Grok
+        Crear con NanoBanana
       </h1>
       
       <p class="max-w-2xl mx-auto text-xl text-white/80 mb-8" data-god="crear.subtitle">
-        Genera vídeos cinematográficos con inteligencia de xAI Grok. Calidad premium para pantallas y campañas.
+        NanoBanana por defecto + Grok como opción. Genera vídeos e imágenes de alta calidad.
       </p>
       
       <div class="flex items-center justify-center gap-3 text-sm">
@@ -118,8 +118,13 @@ import MainLayout from '../layouts/MainLayout.astro';
 
           <!-- Visual Model Selector for Video -->
           <div class="mb-4">
-            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5" data-god="crear.modelLabel">Motor (Grok por defecto)</div>
-            <div class="grid grid-cols-4 gap-1.5" id="video-models"></div>
+            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5" data-god="crear.modelLabel">Motor</div>
+            <select id="video-model-select" class="w-full bg-black text-[#00ff41] border border-[#00ff41]/50 font-mono text-sm px-3 py-2 rounded focus:outline-none focus:border-[#00ff41]">
+              <option value="nanobanana">NanoBanana (default)</option>
+              <option value="grok">Grok (xAI)</option>
+              <option value="veo">Veo 3 (Google)</option>
+              <option value="veo-fast">Veo Fast (Google)</option>
+            </select>
           </div>
 
           <!-- Video specific controls -->
@@ -169,8 +174,12 @@ import MainLayout from '../layouts/MainLayout.astro';
 
           <!-- Visual Model Selector for Image -->
           <div class="mb-4">
-            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5" data-god="crear.modelLabel">Motor (Grok por defecto)</div>
-            <div class="grid grid-cols-4 gap-1.5" id="image-models"></div>
+            <div class="text-[10px] uppercase tracking-widest text-charcoal mb-1.5" data-god="crear.modelLabel">Motor</div>
+            <select id="image-model-select" class="w-full bg-black text-[#00ff41] border border-[#00ff41]/50 font-mono text-sm px-3 py-2 rounded focus:outline-none focus:border-[#00ff41]">
+              <option value="nanobanana">NanoBanana (default)</option>
+              <option value="grok">Grok (xAI)</option>
+              <option value="imagen">Imagen 4 (Google)</option>
+            </select>
           </div>
 
           <div class="grid grid-cols-2 gap-3 mb-6 text-sm">
@@ -367,7 +376,7 @@ import MainLayout from '../layouts/MainLayout.astro';
   </section>
 
   <div class="max-w-7xl mx-auto px-6 pb-16 text-center text-xs text-text-muted">
-    <span data-god="crear.powered">Por defecto siempre con Grok (xAI). Puedes elegir otros motores.</span>
+    <span data-god="crear.powered">NanoBanana por defecto. Grok disponible como alternativa.</span>
   </div>
 </MainLayout>
 
@@ -381,15 +390,15 @@ let recentCreations = [];
 // Visual model cards data
 const MODEL_OPTIONS = {
   video: [
-    { id: 'grok', label: 'Grok', sub: 'xAI', default: true, color: 'orange' },
+    { id: 'nanobanana', label: 'NanoBanana', sub: 'Default', default: true, color: 'orange' },
+    { id: 'grok', label: 'Grok', sub: 'xAI', default: false },
     { id: 'veo', label: 'Veo 3', sub: 'Google', default: false },
-    { id: 'veo-fast', label: 'Veo Fast', sub: 'Google', default: false },
     { id: 'kling', label: 'Kling', sub: 'Próximamente', default: false, disabled: true }
   ],
   image: [
-    { id: 'grok', label: 'Grok', sub: 'xAI', default: true, color: 'orange' },
+    { id: 'nanobanana', label: 'NanoBanana', sub: 'Default', default: true, color: 'orange' },
+    { id: 'grok', label: 'Grok', sub: 'xAI', default: false },
     { id: 'imagen', label: 'Imagen 4', sub: 'Google', default: false },
-    { id: 'imagen-ultra', label: 'Ultra', sub: 'Google', default: false },
     { id: 'flux', label: 'Flux', sub: 'Próximamente', default: false, disabled: true }
   ],
   audio: [
@@ -480,8 +489,8 @@ function renderDynamicParams(type, model) {
 }
 
 function getSelectedModel(type) {
-  const cont = document.getElementById(`${type}-models`);
-  return cont ? cont.dataset.selected : 'grok';
+  const select = document.getElementById(`${type}-model-select`);
+  return select ? select.value : 'nanobanana';
 }
 
 // === SEGMENTACIÓN DE CONTENIDOS (nueva sección para Omnypublicity / gemelo) ===
@@ -762,11 +771,13 @@ async function generateVideo() {
   lastGenerationParams = { type: 'video', prompt, model, params: { duration, aspect, resolution } };
 
   try {
-    let endpoint = '/xai/video';
+    let endpoint = '/nanobanana/video';
     let body = { prompt, duration: Number(duration), aspect_ratio: aspect, resolution };
     let isVeo = false;
 
-    if (model === 'veo' || model === 'veo-fast') {
+    if (model === 'grok') {
+      endpoint = '/xai/video';
+    } else if (model === 'veo' || model === 'veo-fast') {
       endpoint = '/veo/generate';
       body = {
         prompt,
@@ -857,10 +868,12 @@ async function generateImage() {
   lastGenerationParams = { type: 'image', prompt, model, params: { aspect, count } };
 
   try {
-    let endpoint = '/xai/image';
+    let endpoint = '/nanobanana/image';
     let body = { prompt, n: count };
 
-    if (model.includes('imagen')) {
+    if (model === 'grok') {
+      endpoint = '/xai/image';
+    } else if (model.includes('imagen')) {
       endpoint = '/imagen/generate';
       body = { prompt, numberOfImages: count, aspectRatio: aspect };
     }
@@ -1018,7 +1031,11 @@ function showResult(type, url, prompt, model, params = {}) {
   if (content) {
     if (type === 'video') {
       content.innerHTML = `
-        <video controls playsinline class="w-full rounded-2xl bg-black" src="${escHtml(url)}"></video>
+        <div class="relative rounded-2xl overflow-hidden bg-black border border-white/10">
+          <video controls playsinline class="w-full" src="${escHtml(url)}" 
+                 onerror="this.outerHTML='<div class=\\'p-8 text-center text-white/60\\'>No se puede reproducir el vídeo.<br><a href=\\'${escHtml(url)}\\' target=\\'_blank\\' class=\\'underline\\'>Abrir en nueva pestaña</a></div>'">
+          </video>
+        </div>
         <p class="mt-4 text-sm text-text-muted">${escHtml(safePrompt)}</p>
       `;
     } else if (type === 'image') {

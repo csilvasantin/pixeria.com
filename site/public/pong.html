@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pong</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: monospace;
+    }
+    canvas {
+      border: 2px solid #333;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 500;
+
+    const W = canvas.width, H = canvas.height;
+    const PADDLE_W = 12, PADDLE_H = 80;
+    const BALL_SIZE = 10;
+
+    let player = { x: 20, y: H/2 - PADDLE_H/2, w: PADDLE_W, h: PADDLE_H, score: 0, dy: 0 };
+    let ai = { x: W - 20 - PADDLE_W, y: H/2 - PADDLE_H/2, w: PADDLE_W, h: PADDLE_H, score: 0, dy: 0 };
+
+    let ball = {
+      x: W/2, y: H/2,
+      size: BALL_SIZE,
+      dx: 4 * (Math.random() > 0.5 ? 1 : -1),
+      dy: 4 * (Math.random() > 0.5 ? 1 : -1),
+      speed: 4
+    };
+
+    function resetBall() {
+      ball.x = W/2;
+      ball.y = H/2;
+      ball.speed = 4;
+      ball.dx = 4 * (Math.random() > 0.5 ? 1 : -1);
+      ball.dy = 4 * (Math.random() > 0.5 ? 1 : -1);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      let y = e.clientY - rect.top - PADDLE_H/2;
+      player.y = Math.max(0, Math.min(H - PADDLE_H, y));
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') player.dy = -6;
+      if (e.key === 'ArrowDown') player.dy = 6;
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') player.dy = 0;
+    });
+
+    function update() {
+      // Player movement
+      player.y += player.dy;
+      player.y = Math.max(0, Math.min(H - PADDLE_H, player.y));
+
+      // AI
+      const aiSpeed = 3.2;
+      if (ball.dx > 0) {
+        if (ai.y + PADDLE_H/2 < ball.y - 5) ai.y += aiSpeed;
+        else if (ai.y + PADDLE_H/2 > ball.y + 5) ai.y -= aiSpeed;
+      } else {
+        if (ai.y + PADDLE_H/2 < H/2) ai.y += aiSpeed * 0.5;
+        else if (ai.y + PADDLE_H/2 > H/2) ai.y -= aiSpeed * 0.5;
+      }
+      ai.y = Math.max(0, Math.min(H - PADDLE_H, ai.y));
+
+      // Ball
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+
+      // Ball walls (top/bottom)
+      if (ball.y <= 0 || ball.y >= H) ball.dy *= -1;
+
+      // Player paddle
+      if (ball.dx < 0 &&
+          ball.x <= player.x + player.w &&
+          ball.x >= player.x &&
+          ball.y + ball.size >= player.y &&
+          ball.y - ball.size <= player.y + player.h) {
+        ball.dx *= -1.05;
+        ball.dy += (ball.y - (player.y + PADDLE_H/2)) * 0.08;
+        ball.speed = Math.abs(ball.dx);
+        ball.x = player.x + player.w;
+      }
+
+      // AI paddle
+      if (ball.dx > 0 &&
+          ball.x + ball.size >= ai.x &&
+          ball.x <= ai.x + ai.w &&
+          ball.y + ball.size >= ai.y &&
+          ball.y - ball.size <= ai.y + ai.h) {
+        ball.dx *= -1.05;
+        ball.dy += (ball.y - (ai.y + PADDLE_H/2)) * 0.08;
+        ball.speed = Math.abs(ball.dx);
+        ball.x = ai.x - ball.size;
+      }
+
+      // Scoring
+      if (ball.x < 0) {
+        ai.score++;
+        resetBall();
+      }
+      if (ball.x > W) {
+        player.score++;
+        resetBall();
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Center line
+      ctx.strokeStyle = '#333';
+      ctx.setLineDash([10, 10]);
+      ctx.beginPath();
+      ctx.moveTo(W/2, 0);
+      ctx.lineTo(W/2, H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Paddles
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+      ctx.fillRect(ai.x, ai.y, ai.w, ai.h);
+
+      // Ball
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Score
+      ctx.font = '48px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(player.score, W/4, 60);
+      ctx.fillText(ai.score, 3*W/4, 60);
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>
