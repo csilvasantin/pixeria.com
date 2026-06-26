@@ -65,9 +65,15 @@ import MainLayout from '../layouts/MainLayout.astro';
       <!-- CTA -->
       <div class="mt-8 text-center">
         <p class="text-charcoal/70 mb-3">Elige el punto y abre Crear campaña para preparar el contenido con preview antes de comprar en Admira.</p>
-        <a id="calendarCampaignLink" href="/crear-campana/" class="inline-flex items-center gap-2 bg-orange text-cream-50 px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
-          Crear campaña para esta pantalla
-        </a>
+        <div class="inline-flex flex-wrap justify-center gap-3">
+          <a id="calendarCampaignLink" href="/crear-campana/" class="inline-flex items-center gap-2 bg-orange text-cream-50 px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
+            Crear campaña para esta pantalla
+          </a>
+          <a id="calendarReportLink" href="https://www.clearchannel.tv/detail.html" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border border-charcoal/20 text-charcoal px-6 py-3 rounded-lg font-medium hover:bg-charcoal hover:text-cream-50 transition-colors">
+            📡 Ver informe de audiencia verificada
+          </a>
+        </div>
+        <p class="text-xs text-charcoal/40 mt-3">El informe de <strong>clearchannel.tv</strong> cruza qué se emitió × quién lo vio (cámara on-device) para este circuito.</p>
       </div>
     </div>
   </section>
@@ -218,6 +224,7 @@ import MainLayout from '../layouts/MainLayout.astro';
         var pointCount=state.stores.length;
         var screenCount=state.screens.length;
         el.innerHTML='<span><strong>'+state.store.name+'</strong> · '+cityOf(state.store)+' · '+circuitOf(state.store)+'</span><span>'+pointCount+' puntos filtrados · '+screenCount+' pantallas/superficies en este punto</span>';
+        updateReportLink();
       }
       function campaignUrl(){
         var url=new URL('/crear-campana/',window.location.origin);
@@ -227,6 +234,13 @@ import MainLayout from '../layouts/MainLayout.astro';
         return url.pathname+url.search;
       }
       function updateCampaignLink(){var link=$('#calendarCampaignLink');if(link)link.href=campaignUrl();}
+      function updateReportLink(){
+        var link=$('#calendarReportLink');if(!link)return;
+        var circuit=state.store?circuitOf(state.store):'';
+        var url='https://www.clearchannel.tv/detail.html';
+        if(circuit&&circuit!=='all'){url+='?loc='+encodeURIComponent(circuit);}
+        link.href=url;
+      }
       function init(){
         if(!window.EmissionCalendar){ setTimeout(init,150); return; }
         state.date=todayMadrid();$('#dateInp').value=state.date;
